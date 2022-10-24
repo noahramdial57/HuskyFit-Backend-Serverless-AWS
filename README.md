@@ -9,7 +9,7 @@ To Configure AWS on your local machine run the following command:
 aws configure
 ```
 
-Your terminal should look like this:
+Your terminal should resemble the image below. Reach out to Noah for your Access key, Secret access key, and AWS IAM login credentials. 
 
 ![Look Here](https://miro.medium.com/max/1400/1*56pF8cszs0sK2KP_6hyW4Q.png)
 
@@ -43,7 +43,7 @@ Run the following command:
 sls offline
 ```
 
-Paste this URL in your web browser (or whatever URL you see in your terminal:
+Paste this URL in your web browser (or whatever URL you see in your terminal)
 ```
 http://localhost:3000/dev/
 ```
