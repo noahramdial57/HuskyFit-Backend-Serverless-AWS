@@ -26,6 +26,10 @@ Now clone down the repository.
 git clone https://github.com/noahramdial57/UConnFit-Backend-AWS.git
 ```
 
+```
+cd backend
+```
+
 Run the following command to make sure all dependencies are installed.
 
 ```
@@ -33,11 +37,7 @@ npm install
 ```
 
 ## Test for functionality
-Run the following commands:
-
-```
-cd backend
-```
+Run the following command:
 
 ```
 sls offline
