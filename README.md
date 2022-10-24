@@ -32,4 +32,18 @@ Run the following command to make sure all dependencies are installed.
 npm install
 ```
 
+## Test for functionality
+Run the following commands:
 
+```
+cd backend
+```
+
+```
+sls offline
+```
+
+Paste this URL in your web browser (or whatever URL you see in your terminal:
+```
+http://localhost:3000/dev/
+```
