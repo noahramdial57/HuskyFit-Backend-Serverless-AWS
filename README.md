@@ -9,8 +9,11 @@ To Configure AWS on your local machine run the following command:
 aws configure
 ```
 
+Your terminal should look like this:
+
 ![Look Here](https://miro.medium.com/max/1400/1*56pF8cszs0sK2KP_6hyW4Q.png)
 
+## Install Serverless
 Once you have the AWS CLI installed, we need to install serverless. Make sure you have Node version 16 downloaded
 
 ```
