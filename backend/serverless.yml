@@ -18,6 +18,6 @@ functions:
     handler: handler.hello
     events:
       - http:
-          path: /
+          path: /hello
           method: get
-          # private: true
+          private: true
