@@ -45,5 +45,5 @@ sls offline
 
 Paste this URL in your web browser (or whatever URL you see in your terminal)
 ```
-http://localhost:3000/dev/
+http://localhost:3000/dev/hello
 ```
