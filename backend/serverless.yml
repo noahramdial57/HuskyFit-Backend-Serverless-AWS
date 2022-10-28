@@ -21,3 +21,15 @@ functions:
           path: /hello
           method: get
           private: true
+
+  getMeals:
+    runtime: python3.9
+    handler: scraper.getMeals
+    events:
+      - http:
+          path: /{dininghall}/{meal}
+          method: get
+          private: true
+          
+
+
