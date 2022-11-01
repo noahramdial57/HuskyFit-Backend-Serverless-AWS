@@ -1,0 +1,36 @@
+service: UConnFit-Backend
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+
+plugins:
+  - serverless-offline
+  - serverless-add-api-key
+
+custom:
+  apiKeys:
+    - name: noah-api-key
+
+functions:
+  hello:
+    handler: handler.hello
+    runtime: nodejs16.x
+    events:
+      - http:
+          path: /hello
+          method: get
+          private: true
+
+  getMeals:
+    runtime: python3.9
+    handler: scraper.getMeals
+    events:
+      - http:
+          path: /{dininghall}/{meal}
+          method: get
+          private: true
+          
+
+
