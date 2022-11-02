@@ -4,30 +4,65 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs16.x
+  iamRoleStatements:
+  - Effect: 'Allow'
+    Action:
+      - 'lambda:InvokeFunction'
+    Resource: "*"
 
 plugins:
   - serverless-offline
   - serverless-add-api-key
+  - serverless-plugin-warmup
 
 custom:
   apiKeys:
     - name: noah-api-key
 
-functions:
-  hello:
-    handler: handler.hello
-    events:
-      - http:
-          path: /hello
-          method: get
-          private: true
+  warmup:
+    default:
+      enabled: true
+      folderName: '.warmup'
+      memorySize: 256
+      name: warmer-default
+      events:
+        - schedule: 'cron(0/5 8-23:00 ? * MON-FRI *)' # 8:00am to 12:00pm | Every 5 minutes
+      package:
+        individually: true
+        patterns:
+          - '!../**'
+          - '!../../**'
+          - ./**
+      timeout: 5
+      concurrency: 1
 
+functions:
   getMeals:
     runtime: python3.9
     handler: scraper.getMeals
+
+    warmup:
+      default:
+        enabled: false
+
     events:
       - http:
           path: /{dininghall}/{meal}
+          method: get
+          private: true
+
+
+  getBuckleyMeals:
+    runtime: python3.9
+    handler: buckleyScraper.lambda_handler
+    
+    warmup:
+      default:
+        enabled: true
+
+    events:
+      - http:
+          path: /buckley/{meal}/1
           method: get
           private: true
           
