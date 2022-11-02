@@ -26,7 +26,7 @@ custom:
       memorySize: 256
       name: warmer-default
       events:
-        - schedule: 'cron(0/5 8-23:00 ? * MON-FRI *)' # 8:00am to 12:00pm | Every 5 minutes
+        - schedule: 'cron(0/5 8-23:00 ? * MON-FRI *)' # 8:00am to 11:00pm | Every 5 minutes
       package:
         individually: true
         patterns:

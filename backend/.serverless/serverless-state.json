@@ -203,7 +203,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/UConnFit-Backend/dev/1667355716135-2022-11-02T02:21:56.135Z/UConnFit-Backend.zip"
+                "S3Key": "serverless/UConnFit-Backend/dev/1667356218912-2022-11-02T02:30:18.912Z/UConnFit-Backend.zip"
               },
               "Handler": "scraper.getMeals",
               "Runtime": "python3.9",
@@ -228,7 +228,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/UConnFit-Backend/dev/1667355716135-2022-11-02T02:21:56.135Z/UConnFit-Backend.zip"
+                "S3Key": "serverless/UConnFit-Backend/dev/1667356218912-2022-11-02T02:30:18.912Z/UConnFit-Backend.zip"
               },
               "Handler": "buckleyScraper.lambda_handler",
               "Runtime": "python3.9",
@@ -253,7 +253,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/UConnFit-Backend/dev/1667355716135-2022-11-02T02:21:56.135Z/warmUpPluginDefault.zip"
+                "S3Key": "serverless/UConnFit-Backend/dev/1667356218912-2022-11-02T02:30:18.912Z/warmUpPluginDefault.zip"
               },
               "Handler": ".warmup/index.warmUp",
               "Runtime": "nodejs16.x",
@@ -294,14 +294,14 @@
               "CodeSha256": "ZCj3i81OHxuCl/nYQZbiP+TuO4YfGTwRD+DgaOGukTo="
             }
           },
-          "WarmUpPluginDefaultLambdaVersionivQXEMTujq3nVTLo0U4MF8m6tBp21ZTU20BZp3j8LI": {
+          "WarmUpPluginDefaultLambdaVersionNZ53axHU4l87RRs6lfpAFANq5h9ZcnrOZikk6xN3I": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "WarmUpPluginDefaultLambdaFunction"
               },
-              "CodeSha256": "cCazWzmiJTj5mguEDDRhg7kFdvZcv7x3LyPGw11/rjE=",
+              "CodeSha256": "eGIypJAVeuRgXneHT3VNrFl5MikHoUlvXldf8KeQuc8=",
               "Description": "Serverless WarmUp Plugin (warmer \"default\")"
             }
           },
@@ -512,7 +512,7 @@
               "GetBuckleyMealsLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1667355685122": {
+          "ApiGatewayDeployment1667356198042": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -729,7 +729,7 @@
           "WarmUpPluginDefaultLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "WarmUpPluginDefaultLambdaVersionivQXEMTujq3nVTLo0U4MF8m6tBp21ZTU20BZp3j8LI"
+              "Ref": "WarmUpPluginDefaultLambdaVersionNZ53axHU4l87RRs6lfpAFANq5h9ZcnrOZikk6xN3I"
             },
             "Export": {
               "Name": "sls-UConnFit-Backend-dev-WarmUpPluginDefaultLambdaFunctionQualifiedArn"
@@ -961,7 +961,7 @@
         },
         "memory": 256,
         "vpc": {},
-        "versionLogicalId": "WarmUpPluginDefaultLambdaVersionivQXEMTujq3nVTLo0U4MF8m6tBp21ZTU20BZp3j8LI"
+        "versionLogicalId": "WarmUpPluginDefaultLambdaVersionNZ53axHU4l87RRs6lfpAFANq5h9ZcnrOZikk6xN3I"
       }
     },
     "resources": {
@@ -1091,7 +1091,7 @@
     "artifact": "C:\\Users\\noahr\\OneDrive\\Desktop\\UconnFit\\UConnFit-Backend-AWS\\backend\\.serverless\\UConnFit-Backend.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/UConnFit-Backend/dev/1667355716135-2022-11-02T02:21:56.135Z",
+    "artifactDirectoryName": "serverless/UConnFit-Backend/dev/1667356218912-2022-11-02T02:30:18.912Z",
     "artifact": "UConnFit-Backend.zip"
   }
 }
