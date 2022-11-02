@@ -11,14 +11,24 @@ cache_dinner = []
 
 def lambda_handler(event, context):
 
-    # Warmup our function!
-    if event.get("source") == "serverless-plugin-warmup":
-        print("WarmUp - Lambda is warm!")
-        return {}
-
     global cache_breakfast
     global cache_lunch 
     global cache_dinner
+
+    # Warmup our function!
+    if event.get("source") == "serverless-plugin-warmup":
+        print("WarmUp - Lambda is warm!")
+
+        if not cache_breakfast:
+            print("Breakfast not cached")
+
+        if not cache_lunch:
+            print("Lunch not cached")
+
+        if not cache_dinner:
+            print("Dinner not cached")
+
+        return {}
 
     parse = event['path'].split("/")
     meal = parse[2]

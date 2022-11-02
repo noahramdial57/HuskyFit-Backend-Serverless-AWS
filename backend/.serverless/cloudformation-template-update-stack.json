@@ -83,12 +83,6 @@
         "LogGroupName": "/aws/lambda/UConnFit-Backend-dev-getBuckleyMeals"
       }
     },
-    "WarmUpPluginDefaultLogGroup": {
-      "Type": "AWS::Logs::LogGroup",
-      "Properties": {
-        "LogGroupName": "/aws/lambda/warmer-default"
-      }
-    },
     "IamRoleLambdaExecution": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -131,9 +125,6 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*"
-                    },
-                    {
                       "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/UConnFit-Backend-dev*:*"
                     }
                   ]
@@ -144,9 +135,6 @@
                     "logs:PutLogEvents"
                   ],
                   "Resource": [
-                    {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*:*"
-                    },
                     {
                       "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/UConnFit-Backend-dev*:*:*"
                     }
@@ -186,7 +174,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/UConnFit-Backend/dev/1667356218912-2022-11-02T02:30:18.912Z/UConnFit-Backend.zip"
+          "S3Key": "serverless/UConnFit-Backend/dev/1667420407708-2022-11-02T20:20:07.708Z/UConnFit-Backend.zip"
         },
         "Handler": "scraper.getMeals",
         "Runtime": "python3.9",
@@ -211,7 +199,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/UConnFit-Backend/dev/1667356218912-2022-11-02T02:30:18.912Z/UConnFit-Backend.zip"
+          "S3Key": "serverless/UConnFit-Backend/dev/1667420407708-2022-11-02T20:20:07.708Z/UConnFit-Backend.zip"
         },
         "Handler": "buckleyScraper.lambda_handler",
         "Runtime": "python3.9",
@@ -229,100 +217,24 @@
         "GetBuckleyMealsLogGroup"
       ]
     },
-    "WarmUpPluginDefaultLambdaFunction": {
-      "Type": "AWS::Lambda::Function",
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Ref": "ServerlessDeploymentBucket"
-          },
-          "S3Key": "serverless/UConnFit-Backend/dev/1667356218912-2022-11-02T02:30:18.912Z/warmUpPluginDefault.zip"
-        },
-        "Handler": ".warmup/index.warmUp",
-        "Runtime": "nodejs16.x",
-        "FunctionName": "warmer-default",
-        "MemorySize": 256,
-        "Timeout": 5,
-        "Description": "Serverless WarmUp Plugin (warmer \"default\")",
-        "Role": {
-          "Fn::GetAtt": [
-            "WarmUpPluginDefaultRole",
-            "Arn"
-          ]
-        },
-        "Layers": []
-      },
-      "DependsOn": [
-        "WarmUpPluginDefaultLogGroup",
-        "WarmUpPluginDefaultRole"
-      ]
-    },
-    "GetMealsLambdaVersion0YuOzF0knVHzt2Z8EfwKcw7Sj7KRe4aniSqiGUfynW8": {
+    "GetMealsLambdaVersionELb0J2BZVOrCHdPR5XSvvHEovFZiyRSOKVxer7b44": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetMealsLambdaFunction"
         },
-        "CodeSha256": "ZCj3i81OHxuCl/nYQZbiP+TuO4YfGTwRD+DgaOGukTo="
+        "CodeSha256": "denEBeyWvntDfcFHQQrIU4/5ZzTxZRSAKlMKEIPePY0="
       }
     },
-    "GetBuckleyMealsLambdaVersionR9mbTOpjvAgLmSGC7IssjtsfK2IPmFc4r0XaWAwg": {
+    "GetBuckleyMealsLambdaVersiongtQatCnib7874JQ4HpHi9RhM1kadVjQpMSpGreZeMhA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetBuckleyMealsLambdaFunction"
         },
-        "CodeSha256": "ZCj3i81OHxuCl/nYQZbiP+TuO4YfGTwRD+DgaOGukTo="
-      }
-    },
-    "WarmUpPluginDefaultLambdaVersionNZ53axHU4l87RRs6lfpAFANq5h9ZcnrOZikk6xN3I": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "WarmUpPluginDefaultLambdaFunction"
-        },
-        "CodeSha256": "eGIypJAVeuRgXneHT3VNrFl5MikHoUlvXldf8KeQuc8=",
-        "Description": "Serverless WarmUp Plugin (warmer \"default\")"
-      }
-    },
-    "WarmUpPluginDefaultEventsRuleSchedule1": {
-      "Type": "AWS::Events::Rule",
-      "Properties": {
-        "ScheduleExpression": "cron(0/5 8-23:00 ? * MON-FRI *)",
-        "State": "ENABLED",
-        "Targets": [
-          {
-            "Arn": {
-              "Fn::GetAtt": [
-                "WarmUpPluginDefaultLambdaFunction",
-                "Arn"
-              ]
-            },
-            "Id": "warmUpPluginDefaultSchedule"
-          }
-        ]
-      }
-    },
-    "WarmUpPluginDefaultLambdaPermissionEventsRuleSchedule1": {
-      "Type": "AWS::Lambda::Permission",
-      "Properties": {
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "WarmUpPluginDefaultLambdaFunction",
-            "Arn"
-          ]
-        },
-        "Action": "lambda:InvokeFunction",
-        "Principal": "events.amazonaws.com",
-        "SourceArn": {
-          "Fn::GetAtt": [
-            "WarmUpPluginDefaultEventsRuleSchedule1",
-            "Arn"
-          ]
-        }
+        "CodeSha256": "denEBeyWvntDfcFHQQrIU4/5ZzTxZRSAKlMKEIPePY0="
       }
     },
     "ApiGatewayRestApi": {
@@ -495,7 +407,7 @@
         "GetBuckleyMealsLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1667356198042": {
+    "ApiGatewayDeployment1667420380265": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -581,105 +493,6 @@
           ]
         }
       }
-    },
-    "WarmUpPluginDefaultRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "Path": "/",
-        "RoleName": {
-          "Fn::Join": [
-            "-",
-            [
-              "UConnFit-Backend",
-              "dev",
-              {
-                "Ref": "AWS::Region"
-              },
-              "default",
-              "role"
-            ]
-          ]
-        },
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [
-                  "lambda.amazonaws.com"
-                ]
-              },
-              "Action": "sts:AssumeRole"
-            }
-          ]
-        },
-        "Policies": [
-          {
-            "PolicyName": {
-              "Fn::Join": [
-                "-",
-                [
-                  "UConnFit-Backend",
-                  "dev",
-                  "warmer",
-                  "default",
-                  "policy"
-                ]
-              ]
-            },
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "logs:CreateLogGroup",
-                    "logs:CreateLogStream"
-                  ],
-                  "Resource": [
-                    {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*"
-                    }
-                  ]
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "logs:PutLogEvents"
-                  ],
-                  "Resource": [
-                    {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*:*"
-                    }
-                  ]
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "lambda:InvokeFunction"
-                  ],
-                  "Resource": [
-                    {
-                      "Fn::Sub": "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:UConnFit-Backend-dev-getBuckleyMeals*"
-                    }
-                  ]
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "ec2:CreateNetworkInterface",
-                    "ec2:DescribeNetworkInterfaces",
-                    "ec2:DetachNetworkInterface",
-                    "ec2:DeleteNetworkInterface"
-                  ],
-                  "Resource": "*"
-                }
-              ]
-            }
-          }
-        ]
-      }
     }
   },
   "Outputs": {
@@ -694,7 +507,7 @@
     "GetMealsLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetMealsLambdaVersion0YuOzF0knVHzt2Z8EfwKcw7Sj7KRe4aniSqiGUfynW8"
+        "Ref": "GetMealsLambdaVersionELb0J2BZVOrCHdPR5XSvvHEovFZiyRSOKVxer7b44"
       },
       "Export": {
         "Name": "sls-UConnFit-Backend-dev-GetMealsLambdaFunctionQualifiedArn"
@@ -703,19 +516,10 @@
     "GetBuckleyMealsLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetBuckleyMealsLambdaVersionR9mbTOpjvAgLmSGC7IssjtsfK2IPmFc4r0XaWAwg"
+        "Ref": "GetBuckleyMealsLambdaVersiongtQatCnib7874JQ4HpHi9RhM1kadVjQpMSpGreZeMhA"
       },
       "Export": {
         "Name": "sls-UConnFit-Backend-dev-GetBuckleyMealsLambdaFunctionQualifiedArn"
-      }
-    },
-    "WarmUpPluginDefaultLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "WarmUpPluginDefaultLambdaVersionNZ53axHU4l87RRs6lfpAFANq5h9ZcnrOZikk6xN3I"
-      },
-      "Export": {
-        "Name": "sls-UConnFit-Backend-dev-WarmUpPluginDefaultLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {

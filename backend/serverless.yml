@@ -58,7 +58,7 @@ functions:
     
     warmup:
       default:
-        enabled: true
+        enabled: false
 
     events:
       - http:
