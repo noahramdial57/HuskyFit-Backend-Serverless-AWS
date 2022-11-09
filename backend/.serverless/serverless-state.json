@@ -98,12 +98,6 @@
               "LogGroupName": "/aws/lambda/UConnFit-Backend-dev-getMeals"
             }
           },
-          "GetBuckleyMealsLogGroup": {
-            "Type": "AWS::Logs::LogGroup",
-            "Properties": {
-              "LogGroupName": "/aws/lambda/UConnFit-Backend-dev-getBuckleyMeals"
-            }
-          },
           "IamRoleLambdaExecution": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -191,7 +185,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/UConnFit-Backend/dev/1667420407708-2022-11-02T20:20:07.708Z/UConnFit-Backend.zip"
+                "S3Key": "serverless/UConnFit-Backend/dev/1667953377598-2022-11-09T00:22:57.598Z/UConnFit-Backend.zip"
               },
               "Handler": "scraper.getMeals",
               "Runtime": "python3.9",
@@ -209,49 +203,14 @@
               "GetMealsLogGroup"
             ]
           },
-          "GetBuckleyMealsLambdaFunction": {
-            "Type": "AWS::Lambda::Function",
-            "Properties": {
-              "Code": {
-                "S3Bucket": {
-                  "Ref": "ServerlessDeploymentBucket"
-                },
-                "S3Key": "serverless/UConnFit-Backend/dev/1667420407708-2022-11-02T20:20:07.708Z/UConnFit-Backend.zip"
-              },
-              "Handler": "buckleyScraper.lambda_handler",
-              "Runtime": "python3.9",
-              "FunctionName": "UConnFit-Backend-dev-getBuckleyMeals",
-              "MemorySize": 1024,
-              "Timeout": 6,
-              "Role": {
-                "Fn::GetAtt": [
-                  "IamRoleLambdaExecution",
-                  "Arn"
-                ]
-              }
-            },
-            "DependsOn": [
-              "GetBuckleyMealsLogGroup"
-            ]
-          },
-          "GetMealsLambdaVersionELb0J2BZVOrCHdPR5XSvvHEovFZiyRSOKVxer7b44": {
+          "GetMealsLambdaVersionZZNU8Pu2a8FGAL9ySJXff004somjUUmyHskr2n4W4M": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetMealsLambdaFunction"
               },
-              "CodeSha256": "denEBeyWvntDfcFHQQrIU4/5ZzTxZRSAKlMKEIPePY0="
-            }
-          },
-          "GetBuckleyMealsLambdaVersiongtQatCnib7874JQ4HpHi9RhM1kadVjQpMSpGreZeMhA": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "GetBuckleyMealsLambdaFunction"
-              },
-              "CodeSha256": "denEBeyWvntDfcFHQQrIU4/5ZzTxZRSAKlMKEIPePY0="
+              "CodeSha256": "x/QNAlo8NClD1tPS+UwfSj+xaexR2fS8iz6RYXh5hC8="
             }
           },
           "ApiGatewayRestApi": {
@@ -288,45 +247,6 @@
                 "Ref": "ApiGatewayResourceDininghallVar"
               },
               "PathPart": "{meal}",
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              }
-            }
-          },
-          "ApiGatewayResourceBuckley": {
-            "Type": "AWS::ApiGateway::Resource",
-            "Properties": {
-              "ParentId": {
-                "Fn::GetAtt": [
-                  "ApiGatewayRestApi",
-                  "RootResourceId"
-                ]
-              },
-              "PathPart": "buckley",
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              }
-            }
-          },
-          "ApiGatewayResourceBuckleyMealVar": {
-            "Type": "AWS::ApiGateway::Resource",
-            "Properties": {
-              "ParentId": {
-                "Ref": "ApiGatewayResourceBuckley"
-              },
-              "PathPart": "{meal}",
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              }
-            }
-          },
-          "ApiGatewayResourceBuckleyMealVar1": {
-            "Type": "AWS::ApiGateway::Resource",
-            "Properties": {
-              "ParentId": {
-                "Ref": "ApiGatewayResourceBuckleyMealVar"
-              },
-              "PathPart": "1",
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               }
@@ -378,53 +298,7 @@
               "GetMealsLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayMethodBuckleyMealVar1Get": {
-            "Type": "AWS::ApiGateway::Method",
-            "Properties": {
-              "HttpMethod": "GET",
-              "RequestParameters": {},
-              "ResourceId": {
-                "Ref": "ApiGatewayResourceBuckleyMealVar1"
-              },
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              },
-              "ApiKeyRequired": true,
-              "AuthorizationType": "NONE",
-              "Integration": {
-                "IntegrationHttpMethod": "POST",
-                "Type": "AWS_PROXY",
-                "Uri": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition"
-                      },
-                      ":apigateway:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":lambda:path/2015-03-31/functions/",
-                      {
-                        "Fn::GetAtt": [
-                          "GetBuckleyMealsLambdaFunction",
-                          "Arn"
-                        ]
-                      },
-                      "/invocations"
-                    ]
-                  ]
-                }
-              },
-              "MethodResponses": []
-            },
-            "DependsOn": [
-              "GetBuckleyMealsLambdaPermissionApiGateway"
-            ]
-          },
-          "ApiGatewayDeployment1667420380265": {
+          "ApiGatewayDeployment1667953331629": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -433,8 +307,7 @@
               "StageName": "dev"
             },
             "DependsOn": [
-              "ApiGatewayMethodDininghallVarMealVarGet",
-              "ApiGatewayMethodBuckleyMealVar1Get"
+              "ApiGatewayMethodDininghallVarMealVarGet"
             ]
           },
           "GetMealsLambdaPermissionApiGateway": {
@@ -443,43 +316,6 @@
               "FunctionName": {
                 "Fn::GetAtt": [
                   "GetMealsLambdaFunction",
-                  "Arn"
-                ]
-              },
-              "Action": "lambda:InvokeFunction",
-              "Principal": "apigateway.amazonaws.com",
-              "SourceArn": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":execute-api:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "ApiGatewayRestApi"
-                    },
-                    "/*/*"
-                  ]
-                ]
-              }
-            }
-          },
-          "GetBuckleyMealsLambdaPermissionApiGateway": {
-            "Type": "AWS::Lambda::Permission",
-            "Properties": {
-              "FunctionName": {
-                "Fn::GetAtt": [
-                  "GetBuckleyMealsLambdaFunction",
                   "Arn"
                 ]
               },
@@ -524,19 +360,10 @@
           "GetMealsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetMealsLambdaVersionELb0J2BZVOrCHdPR5XSvvHEovFZiyRSOKVxer7b44"
+              "Ref": "GetMealsLambdaVersionZZNU8Pu2a8FGAL9ySJXff004somjUUmyHskr2n4W4M"
             },
             "Export": {
               "Name": "sls-UConnFit-Backend-dev-GetMealsLambdaFunctionQualifiedArn"
-            }
-          },
-          "GetBuckleyMealsLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "GetBuckleyMealsLambdaVersiongtQatCnib7874JQ4HpHi9RhM1kadVjQpMSpGreZeMhA"
-            },
-            "Export": {
-              "Name": "sls-UConnFit-Backend-dev-GetBuckleyMealsLambdaFunctionQualifiedArn"
             }
           },
           "ServiceEndpoint": {
@@ -711,32 +538,7 @@
         "memory": 1024,
         "timeout": 6,
         "vpc": {},
-        "versionLogicalId": "GetMealsLambdaVersionELb0J2BZVOrCHdPR5XSvvHEovFZiyRSOKVxer7b44"
-      },
-      "getBuckleyMeals": {
-        "runtime": "python3.9",
-        "handler": "buckleyScraper.lambda_handler",
-        "warmup": {
-          "default": {
-            "enabled": false
-          }
-        },
-        "events": [
-          {
-            "http": {
-              "path": "buckley/{meal}/1",
-              "method": "get",
-              "private": true,
-              "integration": "AWS_PROXY"
-            }
-          }
-        ],
-        "name": "UConnFit-Backend-dev-getBuckleyMeals",
-        "package": {},
-        "memory": 1024,
-        "timeout": 6,
-        "vpc": {},
-        "versionLogicalId": "GetBuckleyMealsLambdaVersiongtQatCnib7874JQ4HpHi9RhM1kadVjQpMSpGreZeMhA"
+        "versionLogicalId": "GetMealsLambdaVersionZZNU8Pu2a8FGAL9ySJXff004somjUUmyHskr2n4W4M"
       }
     },
     "configValidationMode": "warn",
@@ -762,7 +564,7 @@
     "artifact": "C:\\Users\\noahr\\OneDrive\\Desktop\\UconnFit\\UConnFit-Backend-AWS\\backend\\.serverless\\UConnFit-Backend.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/UConnFit-Backend/dev/1667420407708-2022-11-02T20:20:07.708Z",
+    "artifactDirectoryName": "serverless/UConnFit-Backend/dev/1667953377598-2022-11-09T00:22:57.598Z",
     "artifact": "UConnFit-Backend.zip"
   }
 }

@@ -41,6 +41,7 @@ functions:
     runtime: python3.9
     handler: scraper.getMeals
 
+    # Disable warmup
     warmup:
       default:
         enabled: false
@@ -52,19 +53,19 @@ functions:
           private: true
 
 
-  getBuckleyMeals:
-    runtime: python3.9
-    handler: buckleyScraper.lambda_handler
+  # getBuckleyMeals:
+  #   runtime: python3.9
+  #   handler: buckleyScraper.lambda_handler
     
-    warmup:
-      default:
-        enabled: false
+  #   warmup:
+  #     default:
+  #       enabled: false
 
-    events:
-      - http:
-          path: /buckley/{meal}/1
-          method: get
-          private: true
+  #   events:
+  #     - http:
+  #         path: /buckley/{meal}/1
+  #         method: get
+  #         private: true
           
 
 

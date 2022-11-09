@@ -16,7 +16,7 @@ def getMeals(event, context):
                 "http://nutritionanalysis.dds.uconn.edu/longmenu.aspx?sName=UCONN+Dining+Services&locationNum=01&locationName=Whitney+Dining+Hall&naFlag=1&WeeksMenus=This+Week%27s+Menus&dtdate=",
                 "http://nutritionanalysis.dds.uconn.edu/longmenu.aspx?sName=UCONN+Dining+Services&locationNum=42&locationName=Gelfenbien+Commons%2c+Halal+%26+Kosher&naFlag=1&WeeksMenus=This+Week%27s+Menus&dtdate="]                    # 10%2f27%2f2022&mealName=Breakfast"
 
-    parse = event['path'].split("/")
+    parse = event.split("/")
     dining_hall = parse[1].capitalize()
     meal = parse[2].capitalize()
 
@@ -142,6 +142,9 @@ def getMeals(event, context):
         },
         'body': json.dumps(L)
     }
+
+
+print(getMeals("/south/dinner", 0))
 
 
 
