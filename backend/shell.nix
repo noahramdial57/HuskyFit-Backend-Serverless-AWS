@@ -12,6 +12,7 @@ in pkgs.mkShell rec {
       (python39.withPackages (pp:
         with pp; [
           beautifulsoup4
+          requests
         ]))
   ];
 }    
