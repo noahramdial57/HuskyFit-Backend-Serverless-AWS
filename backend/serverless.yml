@@ -40,6 +40,7 @@ functions:
   getMeals:
     runtime: python3.9
     handler: scraper.getMeals
+    timeout: 10 # lambda will timeout after 10 secs
 
     # Disable warmup
     warmup:
