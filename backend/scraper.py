@@ -55,11 +55,31 @@ def getMeals(event, context):
 
         calories_val = page_soup.find("td", {"class": "nutfactscaloriesval"})
         serving_size = page_soup.findAll("div", {"class": "nutfactsservsize"})
+        allergens = page_soup.find("span", {"class": "labelallergensvalue"})
 
         myDict = dict()
         myDict["Food Item"] = menu_item.text
         myDict["Dining Hall"] = dining_hall
         myDict["Meal"] = meal
+        myDict["Allergens"] = allergens.text
+
+        # Get all dietary restrictions
+        restrictions = []
+        for foo in page_soup.find_all('img', alt=True):
+            text = foo['alt']
+            if "Gluten Friendly" in text:
+                restrictions.append("Gluten Friendly")
+                continue
+            if "Less Sodium" in text:
+                restrictions.append("Less Sodium")
+                continue
+            if "Smart Check" in text:
+                restrictions.append("Smart Check")
+                continue
+
+            restrictions.append(text)
+
+        myDict['Dietary Restrictions'] = restrictions
         myDict["Date"] = str(today)
         myDict["Calories"] = calories_val.text
         myDict["Serving Size"] = serving_size[1].text

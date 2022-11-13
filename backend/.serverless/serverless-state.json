@@ -185,13 +185,13 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/UConnFit-Backend/dev/1667953377598-2022-11-09T00:22:57.598Z/UConnFit-Backend.zip"
+                "S3Key": "serverless/UConnFit-Backend/dev/1668365409859-2022-11-13T18:50:09.859Z/UConnFit-Backend.zip"
               },
               "Handler": "scraper.getMeals",
               "Runtime": "python3.9",
               "FunctionName": "UConnFit-Backend-dev-getMeals",
               "MemorySize": 1024,
-              "Timeout": 6,
+              "Timeout": 10,
               "Role": {
                 "Fn::GetAtt": [
                   "IamRoleLambdaExecution",
@@ -203,14 +203,14 @@
               "GetMealsLogGroup"
             ]
           },
-          "GetMealsLambdaVersionZZNU8Pu2a8FGAL9ySJXff004somjUUmyHskr2n4W4M": {
+          "GetMealsLambdaVersionhEBTigPCeOyQcGjCtvoK066VGUPPAULk77IIoAwyv4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetMealsLambdaFunction"
               },
-              "CodeSha256": "x/QNAlo8NClD1tPS+UwfSj+xaexR2fS8iz6RYXh5hC8="
+              "CodeSha256": "XhMvWqouPYmY1KRsK2QSpJxU8gyBlfK6GHzDVYJG84E="
             }
           },
           "ApiGatewayRestApi": {
@@ -298,7 +298,7 @@
               "GetMealsLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1667953331629": {
+          "ApiGatewayDeployment1668365363012": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -360,7 +360,7 @@
           "GetMealsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetMealsLambdaVersionZZNU8Pu2a8FGAL9ySJXff004somjUUmyHskr2n4W4M"
+              "Ref": "GetMealsLambdaVersionhEBTigPCeOyQcGjCtvoK066VGUPPAULk77IIoAwyv4"
             },
             "Export": {
               "Name": "sls-UConnFit-Backend-dev-GetMealsLambdaFunctionQualifiedArn"
@@ -518,6 +518,7 @@
       "getMeals": {
         "runtime": "python3.9",
         "handler": "scraper.getMeals",
+        "timeout": 10,
         "warmup": {
           "default": {
             "enabled": false
@@ -536,9 +537,8 @@
         "name": "UConnFit-Backend-dev-getMeals",
         "package": {},
         "memory": 1024,
-        "timeout": 6,
         "vpc": {},
-        "versionLogicalId": "GetMealsLambdaVersionZZNU8Pu2a8FGAL9ySJXff004somjUUmyHskr2n4W4M"
+        "versionLogicalId": "GetMealsLambdaVersionhEBTigPCeOyQcGjCtvoK066VGUPPAULk77IIoAwyv4"
       }
     },
     "configValidationMode": "warn",
@@ -564,7 +564,7 @@
     "artifact": "C:\\Users\\noahr\\OneDrive\\Desktop\\UconnFit\\UConnFit-Backend-AWS\\backend\\.serverless\\UConnFit-Backend.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/UConnFit-Backend/dev/1667953377598-2022-11-09T00:22:57.598Z",
+    "artifactDirectoryName": "serverless/UConnFit-Backend/dev/1668365409859-2022-11-13T18:50:09.859Z",
     "artifact": "UConnFit-Backend.zip"
   }
 }
