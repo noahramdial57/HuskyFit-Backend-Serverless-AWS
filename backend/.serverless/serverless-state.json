@@ -1,8 +1,8 @@
 {
   "service": {
-    "service": "UConnFit-Backend",
+    "service": "HuskyFit-API",
     "serviceObject": {
-      "name": "UConnFit-Backend"
+      "name": "HuskyFit-API"
     },
     "provider": {
       "name": "aws",
@@ -95,7 +95,13 @@
           "GetMealsLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/UConnFit-Backend-dev-getMeals"
+              "LogGroupName": "/aws/lambda/HuskyFit-API-dev-getMeals"
+            }
+          },
+          "WarmUpPluginDefaultLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/warmer-default"
             }
           },
           "IamRoleLambdaExecution": {
@@ -123,7 +129,7 @@
                     "Fn::Join": [
                       "-",
                       [
-                        "UConnFit-Backend",
+                        "HuskyFit-API",
                         "dev",
                         "lambda"
                       ]
@@ -140,7 +146,10 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/UConnFit-Backend-dev*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/HuskyFit-API-dev*:*"
                           }
                         ]
                       },
@@ -151,7 +160,10 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/UConnFit-Backend-dev*:*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/HuskyFit-API-dev*:*:*"
                           }
                         ]
                       },
@@ -167,7 +179,7 @@
                 "Fn::Join": [
                   "-",
                   [
-                    "UConnFit-Backend",
+                    "HuskyFit-API",
                     "dev",
                     {
                       "Ref": "AWS::Region"
@@ -185,11 +197,11 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/UConnFit-Backend/dev/1668365409859-2022-11-13T18:50:09.859Z/UConnFit-Backend.zip"
+                "S3Key": "serverless/HuskyFit-API/dev/1668394425995-2022-11-14T02:53:45.995Z/HuskyFit-API.zip"
               },
-              "Handler": "scraper.getMeals",
+              "Handler": "scraper.lambda_handler",
               "Runtime": "python3.9",
-              "FunctionName": "UConnFit-Backend-dev-getMeals",
+              "FunctionName": "HuskyFit-API-dev-getMeals",
               "MemorySize": 1024,
               "Timeout": 10,
               "Role": {
@@ -203,20 +215,96 @@
               "GetMealsLogGroup"
             ]
           },
-          "GetMealsLambdaVersionhEBTigPCeOyQcGjCtvoK066VGUPPAULk77IIoAwyv4": {
+          "WarmUpPluginDefaultLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/HuskyFit-API/dev/1668394425995-2022-11-14T02:53:45.995Z/warmUpPluginDefault.zip"
+              },
+              "Handler": ".warmup/index.warmUp",
+              "Runtime": "nodejs16.x",
+              "FunctionName": "warmer-default",
+              "MemorySize": 256,
+              "Timeout": 5,
+              "Description": "Serverless WarmUp Plugin (warmer \"default\")",
+              "Role": {
+                "Fn::GetAtt": [
+                  "WarmUpPluginDefaultRole",
+                  "Arn"
+                ]
+              },
+              "Layers": []
+            },
+            "DependsOn": [
+              "WarmUpPluginDefaultLogGroup",
+              "WarmUpPluginDefaultRole"
+            ]
+          },
+          "GetMealsLambdaVersionZ0gXBqGma2w6t7qTU0enqqOQ34TjwTFbgoDkN6wm3Ok": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetMealsLambdaFunction"
               },
-              "CodeSha256": "XhMvWqouPYmY1KRsK2QSpJxU8gyBlfK6GHzDVYJG84E="
+              "CodeSha256": "Yr85wpeax11mcgtayCjv7gzjgc29S6nu535+wnXC7ak="
+            }
+          },
+          "WarmUpPluginDefaultLambdaVersionajI3yw2W3QP5thmlxxBILFA2r20DNOb2i5mDXMs": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "WarmUpPluginDefaultLambdaFunction"
+              },
+              "CodeSha256": "4vZb+Hit8ZyNf9jFZysWxVPq5uLW56r3S0sNZoJdaZI=",
+              "Description": "Serverless WarmUp Plugin (warmer \"default\")"
+            }
+          },
+          "WarmUpPluginDefaultEventsRuleSchedule1": {
+            "Type": "AWS::Events::Rule",
+            "Properties": {
+              "ScheduleExpression": "cron(0/5 11-2 ? * SUN-SAT *)",
+              "State": "ENABLED",
+              "Targets": [
+                {
+                  "Arn": {
+                    "Fn::GetAtt": [
+                      "WarmUpPluginDefaultLambdaFunction",
+                      "Arn"
+                    ]
+                  },
+                  "Id": "warmUpPluginDefaultSchedule"
+                }
+              ]
+            }
+          },
+          "WarmUpPluginDefaultLambdaPermissionEventsRuleSchedule1": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "WarmUpPluginDefaultLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "events.amazonaws.com",
+              "SourceArn": {
+                "Fn::GetAtt": [
+                  "WarmUpPluginDefaultEventsRuleSchedule1",
+                  "Arn"
+                ]
+              }
             }
           },
           "ApiGatewayRestApi": {
             "Type": "AWS::ApiGateway::RestApi",
             "Properties": {
-              "Name": "dev-UConnFit-Backend",
+              "Name": "dev-HuskyFit-API",
               "EndpointConfiguration": {
                 "Types": [
                   "EDGE"
@@ -298,7 +386,7 @@
               "GetMealsLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1668365363012": {
+          "ApiGatewayDeployment1668394394326": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -346,6 +434,105 @@
                 ]
               }
             }
+          },
+          "WarmUpPluginDefaultRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "Path": "/",
+              "RoleName": {
+                "Fn::Join": [
+                  "-",
+                  [
+                    "HuskyFit-API",
+                    "dev",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    "default",
+                    "role"
+                  ]
+                ]
+              },
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": "sts:AssumeRole"
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "HuskyFit-API",
+                        "dev",
+                        "warmer",
+                        "default",
+                        "policy"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogGroup",
+                          "logs:CreateLogStream"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:PutLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "lambda:InvokeFunction"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:HuskyFit-API-dev-getMeals*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "ec2:CreateNetworkInterface",
+                          "ec2:DescribeNetworkInterfaces",
+                          "ec2:DetachNetworkInterface",
+                          "ec2:DeleteNetworkInterface"
+                        ],
+                        "Resource": "*"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
           }
         },
         "Outputs": {
@@ -354,16 +541,25 @@
               "Ref": "ServerlessDeploymentBucket"
             },
             "Export": {
-              "Name": "sls-UConnFit-Backend-dev-ServerlessDeploymentBucketName"
+              "Name": "sls-HuskyFit-API-dev-ServerlessDeploymentBucketName"
             }
           },
           "GetMealsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetMealsLambdaVersionhEBTigPCeOyQcGjCtvoK066VGUPPAULk77IIoAwyv4"
+              "Ref": "GetMealsLambdaVersionZ0gXBqGma2w6t7qTU0enqqOQ34TjwTFbgoDkN6wm3Ok"
             },
             "Export": {
-              "Name": "sls-UConnFit-Backend-dev-GetMealsLambdaFunctionQualifiedArn"
+              "Name": "sls-HuskyFit-API-dev-GetMealsLambdaFunctionQualifiedArn"
+            }
+          },
+          "WarmUpPluginDefaultLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "WarmUpPluginDefaultLambdaVersionajI3yw2W3QP5thmlxxBILFA2r20DNOb2i5mDXMs"
+            },
+            "Export": {
+              "Name": "sls-HuskyFit-API-dev-WarmUpPluginDefaultLambdaFunctionQualifiedArn"
             }
           },
           "ServiceEndpoint": {
@@ -389,7 +585,7 @@
               ]
             },
             "Export": {
-              "Name": "sls-UConnFit-Backend-dev-ServiceEndpoint"
+              "Name": "sls-HuskyFit-API-dev-ServiceEndpoint"
             }
           }
         }
@@ -492,7 +688,7 @@
           "name": "warmer-default",
           "events": [
             {
-              "schedule": "cron(0/5 8-23:00 ? * MON-FRI *)"
+              "schedule": "cron(0/5 11-2 ? * SUN-SAT *)"
             }
           ],
           "package": {
@@ -517,11 +713,11 @@
     "functions": {
       "getMeals": {
         "runtime": "python3.9",
-        "handler": "scraper.getMeals",
+        "handler": "scraper.lambda_handler",
         "timeout": 10,
         "warmup": {
           "default": {
-            "enabled": false
+            "enabled": true
           }
         },
         "events": [
@@ -534,17 +730,150 @@
             }
           }
         ],
-        "name": "UConnFit-Backend-dev-getMeals",
+        "name": "HuskyFit-API-dev-getMeals",
         "package": {},
         "memory": 1024,
         "vpc": {},
-        "versionLogicalId": "GetMealsLambdaVersionhEBTigPCeOyQcGjCtvoK066VGUPPAULk77IIoAwyv4"
+        "versionLogicalId": "GetMealsLambdaVersionZ0gXBqGma2w6t7qTU0enqqOQ34TjwTFbgoDkN6wm3Ok"
+      },
+      "warmUpPluginDefault": {
+        "description": "Serverless WarmUp Plugin (warmer \"default\")",
+        "events": {
+          "$ref": "$[\"service\"][\"custom\"][\"warmup\"][\"default\"][\"events\"]"
+        },
+        "handler": ".warmup/index.warmUp",
+        "memorySize": 256,
+        "name": "warmer-default",
+        "runtime": "nodejs16.x",
+        "package": {
+          "individually": true,
+          "patterns": [
+            "!**",
+            "!../**",
+            "!../../**",
+            "./**",
+            ".warmup\\**"
+          ],
+          "artifact": "C:\\Users\\noahr\\OneDrive\\Desktop\\UconnFit\\UConnFit-Backend-AWS\\backend\\.serverless\\warmUpPluginDefault.zip"
+        },
+        "timeout": 5,
+        "role": "WarmUpPluginDefaultRole",
+        "layers": {
+          "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"WarmUpPluginDefaultLambdaFunction\"][\"Properties\"][\"Layers\"]"
+        },
+        "memory": 256,
+        "vpc": {},
+        "versionLogicalId": "WarmUpPluginDefaultLambdaVersionajI3yw2W3QP5thmlxxBILFA2r20DNOb2i5mDXMs"
       }
+    },
+    "resources": {
+      "Resources": {
+        "WarmUpPluginDefaultRole": {
+          "Type": "AWS::IAM::Role",
+          "Properties": {
+            "Path": "/",
+            "RoleName": {
+              "Fn::Join": [
+                "-",
+                [
+                  "HuskyFit-API",
+                  "dev",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  "default",
+                  "role"
+                ]
+              ]
+            },
+            "AssumeRolePolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Principal": {
+                    "Service": [
+                      "lambda.amazonaws.com"
+                    ]
+                  },
+                  "Action": "sts:AssumeRole"
+                }
+              ]
+            },
+            "Policies": [
+              {
+                "PolicyName": {
+                  "Fn::Join": [
+                    "-",
+                    [
+                      "HuskyFit-API",
+                      "dev",
+                      "warmer",
+                      "default",
+                      "policy"
+                    ]
+                  ]
+                },
+                "PolicyDocument": {
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "logs:CreateLogGroup",
+                        "logs:CreateLogStream"
+                      ],
+                      "Resource": [
+                        {
+                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*"
+                        }
+                      ]
+                    },
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "logs:PutLogEvents"
+                      ],
+                      "Resource": [
+                        {
+                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*:*"
+                        }
+                      ]
+                    },
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "lambda:InvokeFunction"
+                      ],
+                      "Resource": [
+                        {
+                          "Fn::Sub": "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:HuskyFit-API-dev-getMeals*"
+                        }
+                      ]
+                    },
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "ec2:CreateNetworkInterface",
+                        "ec2:DescribeNetworkInterfaces",
+                        "ec2:DetachNetworkInterface",
+                        "ec2:DeleteNetworkInterface"
+                      ],
+                      "Resource": "*"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "Outputs": {}
     },
     "configValidationMode": "warn",
     "serviceFilename": "serverless.yml",
     "initialServerlessConfig": {
-      "service": "UConnFit-Backend",
+      "service": "HuskyFit-API",
       "frameworkVersion": "3",
       "provider": {
         "$ref": "$[\"service\"][\"provider\"]"
@@ -561,10 +890,10 @@
     },
     "layers": {},
     "isDashboardMonitoringPreconfigured": false,
-    "artifact": "C:\\Users\\noahr\\OneDrive\\Desktop\\UconnFit\\UConnFit-Backend-AWS\\backend\\.serverless\\UConnFit-Backend.zip"
+    "artifact": "C:\\Users\\noahr\\OneDrive\\Desktop\\UconnFit\\UConnFit-Backend-AWS\\backend\\.serverless\\HuskyFit-API.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/UConnFit-Backend/dev/1668365409859-2022-11-13T18:50:09.859Z",
-    "artifact": "UConnFit-Backend.zip"
+    "artifactDirectoryName": "serverless/HuskyFit-API/dev/1668394425995-2022-11-14T02:53:45.995Z",
+    "artifact": "HuskyFit-API.zip"
   }
 }

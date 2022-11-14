@@ -1,4 +1,4 @@
-service: UConnFit-Backend
+service: HuskyFit-API
 frameworkVersion: '3'
 
 provider:
@@ -26,8 +26,8 @@ custom:
       memorySize: 256
       name: warmer-default
       events:
-        - schedule: 'cron(0/5 8-23:00 ? * MON-FRI *)' # 8:00am to 11:00pm | Every 5 minutes
-      package:
+        - schedule: 'cron(0/5 11-2 ? * SUN-SAT *)' # 11:00am to 2:00pm PST | Every 5 minutes
+      package:                                     # 8:00am to 11:00pm EST
         individually: true
         patterns:
           - '!../**'
@@ -39,34 +39,16 @@ custom:
 functions:
   getMeals:
     runtime: python3.9
-    handler: scraper.getMeals
+    handler: scraper.lambda_handler
     timeout: 10 # lambda will timeout after 10 secs
 
     # Disable warmup
     warmup:
       default:
-        enabled: false
+        enabled: true
 
     events:
       - http:
           path: /{dininghall}/{meal}
           method: get
           private: true
-
-
-  # getBuckleyMeals:
-  #   runtime: python3.9
-  #   handler: buckleyScraper.lambda_handler
-    
-  #   warmup:
-  #     default:
-  #       enabled: false
-
-  #   events:
-  #     - http:
-  #         path: /buckley/{meal}/1
-  #         method: get
-  #         private: true
-          
-
-

@@ -13,9 +13,10 @@ def lambda_handler(event, context):
         return {}
 
     parse = event['path'].split("/") # ['', 'buckley', 'lunch']
+    # parse = event.split("/")
     dining_hall = parse[1].capitalize()
     meal = parse[2].capitalize()
-    path = "/tmp/" + dining_hall + "-" + meal + ".json"
+    path = "tmp/" + dining_hall + "-" + meal + ".json"
 
     # If file exists, continue 
     if os.path.isfile(path):
@@ -26,6 +27,7 @@ def lambda_handler(event, context):
 
     # If file is empty, run the algo and cache the data
     if os.path.getsize(path) == 0:
+        print("Running web scraping algorithm")
         data = json.dumps(getMeals(dining_hall, meal))
 
         # Cache the data in its corresponding file
