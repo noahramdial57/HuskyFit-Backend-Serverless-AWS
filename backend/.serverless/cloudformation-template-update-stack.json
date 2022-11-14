@@ -180,7 +180,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/HuskyFit-API/dev/1668394425995-2022-11-14T02:53:45.995Z/HuskyFit-API.zip"
+          "S3Key": "serverless/HuskyFit-API/dev/1668396969323-2022-11-14T03:36:09.323Z/HuskyFit-API.zip"
         },
         "Handler": "scraper.lambda_handler",
         "Runtime": "python3.9",
@@ -205,7 +205,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/HuskyFit-API/dev/1668394425995-2022-11-14T02:53:45.995Z/warmUpPluginDefault.zip"
+          "S3Key": "serverless/HuskyFit-API/dev/1668396969323-2022-11-14T03:36:09.323Z/warmUpPluginDefault.zip"
         },
         "Handler": ".warmup/index.warmUp",
         "Runtime": "nodejs16.x",
@@ -236,21 +236,21 @@
         "CodeSha256": "Yr85wpeax11mcgtayCjv7gzjgc29S6nu535+wnXC7ak="
       }
     },
-    "WarmUpPluginDefaultLambdaVersionajI3yw2W3QP5thmlxxBILFA2r20DNOb2i5mDXMs": {
+    "WarmUpPluginDefaultLambdaVersion4TBWTI7R0yP5U44vKEuLS4JBpUwwlmjBQjQhPpXxM": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "WarmUpPluginDefaultLambdaFunction"
         },
-        "CodeSha256": "4vZb+Hit8ZyNf9jFZysWxVPq5uLW56r3S0sNZoJdaZI=",
+        "CodeSha256": "9uTX+obXub4iYycBb2hCxWxvo//PnTajaKMfRiDTRO8=",
         "Description": "Serverless WarmUp Plugin (warmer \"default\")"
       }
     },
     "WarmUpPluginDefaultEventsRuleSchedule1": {
       "Type": "AWS::Events::Rule",
       "Properties": {
-        "ScheduleExpression": "cron(0/5 11-2 ? * SUN-SAT *)",
+        "ScheduleExpression": "cron(0/5 13-5 ? * SUN-SAT *)",
         "State": "ENABLED",
         "Targets": [
           {
@@ -369,7 +369,7 @@
         "GetMealsLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1668394394326": {
+    "ApiGatewayDeployment1668396954150": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -539,7 +539,7 @@
     "WarmUpPluginDefaultLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "WarmUpPluginDefaultLambdaVersionajI3yw2W3QP5thmlxxBILFA2r20DNOb2i5mDXMs"
+        "Ref": "WarmUpPluginDefaultLambdaVersion4TBWTI7R0yP5U44vKEuLS4JBpUwwlmjBQjQhPpXxM"
       },
       "Export": {
         "Name": "sls-HuskyFit-API-dev-WarmUpPluginDefaultLambdaFunctionQualifiedArn"

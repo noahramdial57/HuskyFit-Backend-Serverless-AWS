@@ -26,8 +26,8 @@ custom:
       memorySize: 256
       name: warmer-default
       events:
-        - schedule: 'cron(0/5 11-2 ? * SUN-SAT *)' # 11:00am to 2:00pm PST | Every 5 minutes
-      package:                                     # 8:00am to 11:00pm EST
+        - schedule: 'cron(0/5 13-5 ? * SUN-SAT *)' # 8:00am to 12:00pm EST | Every 5 minutes | UTX
+      package:                                     
         individually: true
         patterns:
           - '!../**'
