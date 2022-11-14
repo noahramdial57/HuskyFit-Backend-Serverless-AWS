@@ -65,6 +65,10 @@ def getMeals(dining_hall, meal):
                 "http://nutritionanalysis.dds.uconn.edu/longmenu.aspx?sName=UCONN+Dining+Services&locationNum=01&locationName=Whitney+Dining+Hall&naFlag=1&WeeksMenus=This+Week%27s+Menus&dtdate=",
                 "http://nutritionanalysis.dds.uconn.edu/longmenu.aspx?sName=UCONN+Dining+Services&locationNum=42&locationName=Gelfenbien+Commons%2c+Halal+%26+Kosher&naFlag=1&WeeksMenus=This+Week%27s+Menus&dtdate="]                    # 10%2f27%2f2022&mealName=Breakfast"
 
+    # string issues with mcmahon
+    if dining_hall == "Mcmahon":
+        dining_hall = "McMahon"
+
     # What dining hall is it?
     url = ""
     for link in link_list:
