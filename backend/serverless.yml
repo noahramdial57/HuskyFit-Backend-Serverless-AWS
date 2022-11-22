@@ -4,17 +4,14 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs16.x
-  iamRoleStatements:
-  - Effect: 'Allow'
-    Action:
-      - 'lambda:InvokeFunction'
-    Resource: "*"
   environment:
     user_pool_id: { Ref: UserPool }
     client_id: { Ref: UserClient }
+  # iam.role.statements:
   iamRoleStatements:
     - Effect: Allow
       Action:
+        - 'lambda:InvokeFunction'
         - cognito-idp:AdminInitiateAuth
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminSetUserPassword
@@ -23,28 +20,28 @@ provider:
 plugins:
   - serverless-offline
   - serverless-add-api-key
-  - serverless-plugin-warmup
+  # - serverless-plugin-warmup
 
 custom:
   apiKeys:
     - name: noah-api-key
 
-  warmup:
-    default:
-      enabled: true
-      folderName: '.warmup'
-      memorySize: 256
-      name: warmer-default
-      events:
-        - schedule: 'cron(0/5 8-23:00 ? * MON-FRI *)' # 8:00am to 11:00pm | Every 5 minutes
-      package:
-        individually: true
-        patterns:
-          - '!../**'
-          - '!../../**'
-          - ./**
-      timeout: 5
-      concurrency: 1
+  # warmup:
+  #   default:
+  #     enabled: true
+  #     folderName: '.warmup'
+  #     memorySize: 256
+  #     name: warmer-default
+  #     events:
+  #       - schedule: 'cron(0/5 8-23:00 ? * MON-FRI *)' # 8:00am to 11:00pm | Every 5 minutes
+  #     package:
+  #       individually: true
+  #       patterns:
+  #         - '!../**'
+  #         - '!../../**'
+  #         - ./**
+  #     timeout: 5
+  #     concurrency: 1
 
 functions:
   getMeals:
@@ -52,9 +49,9 @@ functions:
     handler: scraper.getMeals
 
     # Disable warmup
-    warmup:
-      default:
-        enabled: false
+    # warmup:
+    #   default:
+    #     enabled: false
 
     events:
       - http:
@@ -63,34 +60,34 @@ functions:
           private: true
   # login and signup lambdas
   loginUser:
-    handler: user/login.handler
+    handler: auth/login.handler
     events:
       - http:
-          path: user/login
+          path: auth/login
           method: post
           cors: true
-          private: true
-    warmup:
-      default:
-        enabled: false
+          # private: true
+    # warmup:
+    #   default:
+    #     enabled: false
 
   signupUser:
-    handler: user/signup.handler
+    handler: auth/signup.handler
     events:
       - http:
-          path: user/signup
+          path: auth/signup
           method: post
           cors: true
           private: true
-    warmup:
-      default:
-        enabled: false
+    # warmup:
+    #   default:
+    #     enabled: false
 
   privateAPI:
-    handler: user/private.handler
+    handler: auth/private.handler
     events:
       - http:
-          path: user/private
+          path: auth/private
           method: post
           cors: true
           private: true
@@ -103,9 +100,9 @@ functions:
                 - Arn
             claims:
               - email
-    warmup:
-      default:
-        enabled: false
+    # warmup:
+    #   default:
+    #     enabled: false
 
 resources:
   Resources:
@@ -117,9 +114,15 @@ resources:
           - Name: email
             Required: true
             Mutable: true
+          # - Name: name
+          #   Required: true
+          #   Mutable: true
+          # - Name: birthdate
+          #   Required: true
+          #   Mutable: true
         Policies:
           PasswordPolicy:
-            MinimumLength: 6
+            MinimumLength: 8
         AutoVerifiedAttributes: ["email"]
 
     UserClient:

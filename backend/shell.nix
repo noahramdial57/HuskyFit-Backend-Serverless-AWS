@@ -13,6 +13,7 @@ in
       android-udev-rules
       gradle
       nodePackages.expo-cli
+      nodePackages.prettier
       awscli
       (yarn.override {nodejs = nodejs-16_x;})
       (python39.withPackages (pp:
