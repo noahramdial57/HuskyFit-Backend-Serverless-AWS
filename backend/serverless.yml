@@ -61,21 +61,49 @@ functions:
           path: /{dininghall}/{meal}
           method: get
           private: true
+  # login and signup lambdas
+  loginUser:
+    handler: user/login.handler
+    events:
+      - http:
+          path: user/login
+          method: post
+          cors: true
+          private: true
+    warmup:
+      default:
+        enabled: false
 
+  signupUser:
+    handler: user/signup.handler
+    events:
+      - http:
+          path: user/signup
+          method: post
+          cors: true
+          private: true
+    warmup:
+      default:
+        enabled: false
 
-  # getBuckleyMeals:
-  #   runtime: python3.9
-  #   handler: buckleyScraper.lambda_handler
-    
-  #   warmup:
-  #     default:
-  #       enabled: false
-
-  #   events:
-  #     - http:
-  #         path: /buckley/{meal}/1
-  #         method: get
-  #         private: true
-          
-
+  privateAPI:
+    handler: user/private.handler
+    events:
+      - http:
+          path: user/private
+          method: post
+          cors: true
+          private: true
+          authorizer:
+            name: PrivateAuthorizer
+            type: COGNITO_USER_POOLS
+            arn:
+              Fn::GetAtt:
+                - UserPool
+                - Arn
+            claims:
+              - email
+    warmup:
+      default:
+        enabled: false
 
