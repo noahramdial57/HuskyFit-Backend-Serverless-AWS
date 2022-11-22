@@ -4,21 +4,29 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs16.x
+  environment:
+    user_pool_id: { Ref: UserPool }
+    client_id: { Ref: UserClient }
+  # iam.role.statements:
   iamRoleStatements:
-  - Effect: 'Allow'
-    Action:
-      - 'lambda:InvokeFunction'
-    Resource: "*"
+    - Effect: Allow
+      Action:
+        - 'lambda:InvokeFunction'
+        - cognito-idp:AdminInitiateAuth
+        - cognito-idp:AdminCreateUser
+        - cognito-idp:AdminSetUserPassword
+      Resource: "*"
 
 plugins:
   - serverless-offline
   - serverless-add-api-key
-  - serverless-plugin-warmup
+  # - serverless-plugin-warmup
 
 custom:
   apiKeys:
     - name: noah-api-key
 
+<<<<<<< HEAD
   warmup:
     default:
       enabled: true
@@ -35,6 +43,24 @@ custom:
           - ./**
       timeout: 5
       concurrency: 1
+=======
+  # warmup:
+  #   default:
+  #     enabled: true
+  #     folderName: '.warmup'
+  #     memorySize: 256
+  #     name: warmer-default
+  #     events:
+  #       - schedule: 'cron(0/5 8-23:00 ? * MON-FRI *)' # 8:00am to 11:00pm | Every 5 minutes
+  #     package:
+  #       individually: true
+  #       patterns:
+  #         - '!../**'
+  #         - '!../../**'
+  #         - ./**
+  #     timeout: 5
+  #     concurrency: 1
+>>>>>>> 1eddb240af521bb71006bd2af1d44461bdb0ee1d
 
 functions:
   getMeals:
@@ -43,12 +69,99 @@ functions:
     timeout: 10 # lambda will timeout after 10 secs
 
     # Disable warmup
+<<<<<<< HEAD
     warmup:
       default:
         enabled: true
+=======
+    # warmup:
+    #   default:
+    #     enabled: false
+>>>>>>> 1eddb240af521bb71006bd2af1d44461bdb0ee1d
 
     events:
       - http:
           path: /{dininghall}/{meal}
           method: get
+<<<<<<< HEAD
           private: true
+=======
+          private: true
+  # login and signup lambdas
+  loginUser:
+    handler: auth/login.handler
+    events:
+      - http:
+          path: auth/login
+          method: post
+          cors: true
+          # private: true
+    # warmup:
+    #   default:
+    #     enabled: false
+
+  signupUser:
+    handler: auth/signup.handler
+    events:
+      - http:
+          path: auth/signup
+          method: post
+          cors: true
+          private: true
+    # warmup:
+    #   default:
+    #     enabled: false
+
+  privateAPI:
+    handler: auth/private.handler
+    events:
+      - http:
+          path: auth/private
+          method: post
+          cors: true
+          private: true
+          authorizer:
+            name: PrivateAuthorizer
+            type: COGNITO_USER_POOLS
+            arn:
+              Fn::GetAtt:
+                - UserPool
+                - Arn
+            claims:
+              - email
+    # warmup:
+    #   default:
+    #     enabled: false
+
+resources:
+  Resources:
+    UserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: serverless-auth-pool
+        Schema:
+          - Name: email
+            Required: true
+            Mutable: true
+          # - Name: name
+          #   Required: true
+          #   Mutable: true
+          # - Name: birthdate
+          #   Required: true
+          #   Mutable: true
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 8
+        AutoVerifiedAttributes: ["email"]
+
+    UserClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: user-pool-ui
+        GenerateSecret: false
+        UserPoolId: { Ref: UserPool }
+        AccessTokenValidity: 5
+        IdTokenValidity: 5
+        ExplicitAuthFlows:
+          - "ADMIN_NO_SRP_AUTH"
+>>>>>>> 1eddb240af521bb71006bd2af1d44461bdb0ee1d
