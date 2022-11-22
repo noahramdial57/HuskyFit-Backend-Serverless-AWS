@@ -3,6 +3,7 @@ from datetime import date
 import requests
 import unicodedata
 import json
+import csv
 
 def getMeals(event):
 
@@ -175,9 +176,18 @@ def getMeals(event):
 
 
 def main():
+
+    today = date.today()
+    dd = today.strftime("%d")
+    mm = today.strftime("%m")
+    yyyy = today.strftime("%Y")
+
     data = []
-    d0 = getMeals("mcmahon/breakfast")
-    # d1 = getMeals("mcmahon/lunch")
+    # d0 = getMeals("mcmahon/breakfast")
+    d1 = getMeals("mcmahon/lunch")
+    # print(type(d1))
+    for i in d1:
+        print(i)
     # d2 = getMeals("mcmahon/dinner")
     # d3 = getMeals("south/breakfast")
     # d4 = getMeals("south/lunch")
@@ -201,11 +211,29 @@ def main():
     # d22 = getMeals("gelfenbien/lunch")
     # d23 = getMeals("gelfenbien/dinner")
 
-    data.append(d0)
+    # data.extend((d1))
     # data.extend((d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19, d20, d21, d22, d23))
+    # jdata = json.dumps(data, indent=4)
+    
+    
+    # # data = cachetodaysmeals()
+    # __import__('pprint').pprint(data)
+    # __import__('pprint').pprint(jdata)
+    # __import__('pprint').pprint(type(data))
 
-    # data = cachetodaysmeals()
-    __import__('pprint').pprint(data)
+    # csv_file = dd+mm+yyyy+'data.json'
+    # with open(csv_file, 'w') as f:
+    #     f.write(jdata)
+    
+    # csv_writer = csv.writer(data_file)
+    # count = 0
+    # for d in data:
+    #     if count == 0:
+    #         header = d.keys()
+    #         csv_writer.writerow(header)
+    #         count += 1
+    #     csv_writer.writerow(d.values())
+    # data_file.close()
 
 if __name__ == "__main__":
     main()

@@ -9,6 +9,16 @@ provider:
     Action:
       - 'lambda:InvokeFunction'
     Resource: "*"
+  environment:
+    user_pool_id: { Ref: UserPool }
+    client_id: { Ref: UserClient }
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - cognito-idp:AdminInitiateAuth
+        - cognito-idp:AdminCreateUser
+        - cognito-idp:AdminSetUserPassword
+      Resource: "*"
 
 plugins:
   - serverless-offline
