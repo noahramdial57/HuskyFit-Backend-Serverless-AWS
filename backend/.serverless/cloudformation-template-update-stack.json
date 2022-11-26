@@ -77,10 +77,22 @@
         "LogGroupName": "/aws/lambda/HuskyFit-API-dev-getMeals"
       }
     },
-    "WarmUpPluginDefaultLogGroup": {
+    "LoginUserLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/warmer-default"
+        "LogGroupName": "/aws/lambda/HuskyFit-API-dev-loginUser"
+      }
+    },
+    "SignupUserLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/HuskyFit-API-dev-signupUser"
+      }
+    },
+    "PrivateAPILogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/HuskyFit-API-dev-privateAPI"
       }
     },
     "IamRoleLambdaExecution": {
@@ -125,9 +137,6 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*"
-                    },
-                    {
                       "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/HuskyFit-API-dev*:*"
                     }
                   ]
@@ -139,9 +148,6 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*:*"
-                    },
-                    {
                       "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/HuskyFit-API-dev*:*:*"
                     }
                   ]
@@ -149,7 +155,10 @@
                 {
                   "Effect": "Allow",
                   "Action": [
-                    "lambda:InvokeFunction"
+                    "lambda:InvokeFunction",
+                    "cognito-idp:AdminInitiateAuth",
+                    "cognito-idp:AdminCreateUser",
+                    "cognito-idp:AdminSetUserPassword"
                   ],
                   "Resource": "*"
                 }
@@ -180,13 +189,23 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/HuskyFit-API/dev/1668396969323-2022-11-14T03:36:09.323Z/HuskyFit-API.zip"
+          "S3Key": "serverless/HuskyFit-API/dev/1669427366231-2022-11-26T01:49:26.231Z/HuskyFit-API.zip"
         },
         "Handler": "scraper.lambda_handler",
         "Runtime": "python3.9",
         "FunctionName": "HuskyFit-API-dev-getMeals",
         "MemorySize": 1024,
         "Timeout": 10,
+        "Environment": {
+          "Variables": {
+            "user_pool_id": {
+              "Ref": "UserPool"
+            },
+            "client_id": {
+              "Ref": "UserClient"
+            }
+          }
+        },
         "Role": {
           "Fn::GetAtt": [
             "IamRoleLambdaExecution",
@@ -198,90 +217,149 @@
         "GetMealsLogGroup"
       ]
     },
-    "WarmUpPluginDefaultLambdaFunction": {
+    "LoginUserLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/HuskyFit-API/dev/1668396969323-2022-11-14T03:36:09.323Z/warmUpPluginDefault.zip"
+          "S3Key": "serverless/HuskyFit-API/dev/1669427366231-2022-11-26T01:49:26.231Z/HuskyFit-API.zip"
         },
-        "Handler": ".warmup/index.warmUp",
+        "Handler": "auth/login.handler",
         "Runtime": "nodejs16.x",
-        "FunctionName": "warmer-default",
-        "MemorySize": 256,
-        "Timeout": 5,
-        "Description": "Serverless WarmUp Plugin (warmer \"default\")",
+        "FunctionName": "HuskyFit-API-dev-loginUser",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "user_pool_id": {
+              "Ref": "UserPool"
+            },
+            "client_id": {
+              "Ref": "UserClient"
+            }
+          }
+        },
         "Role": {
           "Fn::GetAtt": [
-            "WarmUpPluginDefaultRole",
+            "IamRoleLambdaExecution",
             "Arn"
           ]
-        },
-        "Layers": []
+        }
       },
       "DependsOn": [
-        "WarmUpPluginDefaultLogGroup",
-        "WarmUpPluginDefaultRole"
+        "LoginUserLogGroup"
       ]
     },
-    "GetMealsLambdaVersionZ0gXBqGma2w6t7qTU0enqqOQ34TjwTFbgoDkN6wm3Ok": {
+    "SignupUserLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/HuskyFit-API/dev/1669427366231-2022-11-26T01:49:26.231Z/HuskyFit-API.zip"
+        },
+        "Handler": "auth/signup.handler",
+        "Runtime": "nodejs16.x",
+        "FunctionName": "HuskyFit-API-dev-signupUser",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "user_pool_id": {
+              "Ref": "UserPool"
+            },
+            "client_id": {
+              "Ref": "UserClient"
+            }
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "SignupUserLogGroup"
+      ]
+    },
+    "PrivateAPILambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/HuskyFit-API/dev/1669427366231-2022-11-26T01:49:26.231Z/HuskyFit-API.zip"
+        },
+        "Handler": "auth/private.handler",
+        "Runtime": "nodejs16.x",
+        "FunctionName": "HuskyFit-API-dev-privateAPI",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "user_pool_id": {
+              "Ref": "UserPool"
+            },
+            "client_id": {
+              "Ref": "UserClient"
+            }
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "PrivateAPILogGroup"
+      ]
+    },
+    "GetMealsLambdaVersioneJv4IEJcSJI2eHQXNH5GjmBsUtb0GPeGzq7hGzYmes": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetMealsLambdaFunction"
         },
-        "CodeSha256": "Yr85wpeax11mcgtayCjv7gzjgc29S6nu535+wnXC7ak="
+        "CodeSha256": "CnfcOEAcIB1MfhRX8T38LSckU04TGmbIGlT0i8lVMC4="
       }
     },
-    "WarmUpPluginDefaultLambdaVersion4TBWTI7R0yP5U44vKEuLS4JBpUwwlmjBQjQhPpXxM": {
+    "LoginUserLambdaVersion8ctYzFfvAL3jKErfjOB9EU8PSTEG4lDW1i4GCMaNPWk": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "WarmUpPluginDefaultLambdaFunction"
+          "Ref": "LoginUserLambdaFunction"
         },
-        "CodeSha256": "9uTX+obXub4iYycBb2hCxWxvo//PnTajaKMfRiDTRO8=",
-        "Description": "Serverless WarmUp Plugin (warmer \"default\")"
+        "CodeSha256": "CnfcOEAcIB1MfhRX8T38LSckU04TGmbIGlT0i8lVMC4="
       }
     },
-    "WarmUpPluginDefaultEventsRuleSchedule1": {
-      "Type": "AWS::Events::Rule",
-      "Properties": {
-        "ScheduleExpression": "cron(0/5 13-5 ? * SUN-SAT *)",
-        "State": "ENABLED",
-        "Targets": [
-          {
-            "Arn": {
-              "Fn::GetAtt": [
-                "WarmUpPluginDefaultLambdaFunction",
-                "Arn"
-              ]
-            },
-            "Id": "warmUpPluginDefaultSchedule"
-          }
-        ]
-      }
-    },
-    "WarmUpPluginDefaultLambdaPermissionEventsRuleSchedule1": {
-      "Type": "AWS::Lambda::Permission",
+    "SignupUserLambdaVersionvXw9Rwqusgb4NXxA2MW1lBas31JaW9hPS8jYy3ppA": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Fn::GetAtt": [
-            "WarmUpPluginDefaultLambdaFunction",
-            "Arn"
-          ]
+          "Ref": "SignupUserLambdaFunction"
         },
-        "Action": "lambda:InvokeFunction",
-        "Principal": "events.amazonaws.com",
-        "SourceArn": {
-          "Fn::GetAtt": [
-            "WarmUpPluginDefaultEventsRuleSchedule1",
-            "Arn"
-          ]
-        }
+        "CodeSha256": "CnfcOEAcIB1MfhRX8T38LSckU04TGmbIGlT0i8lVMC4="
+      }
+    },
+    "PrivateAPILambdaVersionnDQhn9c1nNUD4AI4mRgHW5OXLPiLiQsAdcybk5OdL8": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "PrivateAPILambdaFunction"
+        },
+        "CodeSha256": "CnfcOEAcIB1MfhRX8T38LSckU04TGmbIGlT0i8lVMC4="
       }
     },
     "ApiGatewayRestApi": {
@@ -318,6 +396,192 @@
           "Ref": "ApiGatewayResourceDininghallVar"
         },
         "PathPart": "{meal}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceAuth": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "auth",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceAuthLogin": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceAuth"
+        },
+        "PathPart": "login",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceAuthSignup": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceAuth"
+        },
+        "PathPart": "signup",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceAuthPrivate": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceAuth"
+        },
+        "PathPart": "private",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodAuthLoginOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAuthLogin"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodAuthSignupOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAuthSignup"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodAuthPrivateOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAuthPrivate"
+        },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
@@ -369,7 +633,166 @@
         "GetMealsLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1668396954150": {
+    "ApiGatewayMethodAuthLoginPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAuthLogin"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "LoginUserLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "LoginUserLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodAuthSignupPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAuthSignup"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SignupUserLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "SignupUserLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodAuthPrivatePost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAuthPrivate"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "COGNITO_USER_POOLS",
+        "AuthorizerId": {
+          "Ref": "PrivateAuthorizerApiGatewayAuthorizer"
+        },
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "PrivateAPILambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": "PrivateAuthorizerApiGatewayAuthorizer"
+    },
+    "PrivateAuthorizerApiGatewayAuthorizer": {
+      "Type": "AWS::ApiGateway::Authorizer",
+      "Properties": {
+        "AuthorizerResultTtlInSeconds": 300,
+        "IdentitySource": "method.request.header.Authorization",
+        "Name": "PrivateAuthorizer",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "Type": "COGNITO_USER_POOLS",
+        "ProviderARNs": [
+          {
+            "Fn::GetAtt": [
+              "UserPool",
+              "Arn"
+            ]
+          }
+        ]
+      }
+    },
+    "ApiGatewayDeployment1669427336459": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -378,7 +801,13 @@
         "StageName": "dev"
       },
       "DependsOn": [
-        "ApiGatewayMethodDininghallVarMealVarGet"
+        "ApiGatewayMethodAuthLoginOptions",
+        "ApiGatewayMethodAuthSignupOptions",
+        "ApiGatewayMethodAuthPrivateOptions",
+        "ApiGatewayMethodDininghallVarMealVarGet",
+        "ApiGatewayMethodAuthLoginPost",
+        "ApiGatewayMethodAuthSignupPost",
+        "ApiGatewayMethodAuthPrivatePost"
       ]
     },
     "GetMealsLambdaPermissionApiGateway": {
@@ -418,102 +847,162 @@
         }
       }
     },
-    "WarmUpPluginDefaultRole": {
-      "Type": "AWS::IAM::Role",
+    "LoginUserLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
       "Properties": {
-        "Path": "/",
-        "RoleName": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "LoginUserLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
           "Fn::Join": [
-            "-",
+            "",
             [
-              "HuskyFit-API",
-              "dev",
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
               {
                 "Ref": "AWS::Region"
               },
-              "default",
-              "role"
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
             ]
           ]
-        },
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [
-                  "lambda.amazonaws.com"
-                ]
-              },
-              "Action": "sts:AssumeRole"
-            }
+        }
+      }
+    },
+    "SignupUserLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SignupUserLambdaFunction",
+            "Arn"
           ]
         },
-        "Policies": [
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "PrivateAPILambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "PrivateAPILambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "UserPool": {
+      "Type": "AWS::Cognito::UserPool",
+      "Properties": {
+        "UserPoolName": "serverless-auth-pool",
+        "Schema": [
           {
-            "PolicyName": {
-              "Fn::Join": [
-                "-",
-                [
-                  "HuskyFit-API",
-                  "dev",
-                  "warmer",
-                  "default",
-                  "policy"
-                ]
-              ]
-            },
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "logs:CreateLogGroup",
-                    "logs:CreateLogStream"
-                  ],
-                  "Resource": [
-                    {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*"
-                    }
-                  ]
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "logs:PutLogEvents"
-                  ],
-                  "Resource": [
-                    {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/warmer-default:*:*"
-                    }
-                  ]
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "lambda:InvokeFunction"
-                  ],
-                  "Resource": [
-                    {
-                      "Fn::Sub": "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:HuskyFit-API-dev-getMeals*"
-                    }
-                  ]
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "ec2:CreateNetworkInterface",
-                    "ec2:DescribeNetworkInterfaces",
-                    "ec2:DetachNetworkInterface",
-                    "ec2:DeleteNetworkInterface"
-                  ],
-                  "Resource": "*"
-                }
-              ]
-            }
+            "Name": "email",
+            "Required": true,
+            "Mutable": true
+          },
+          {
+            "Name": "name",
+            "Required": true,
+            "Mutable": true,
+            "AttributeDataType": "String"
+          },
+          {
+            "Name": "birthdate",
+            "Required": true,
+            "Mutable": true,
+            "AttributeDataType": "String"
           }
+        ],
+        "Policies": {
+          "PasswordPolicy": {
+            "MinimumLength": 8
+          }
+        },
+        "AutoVerifiedAttributes": [
+          "email"
+        ]
+      }
+    },
+    "UserClient": {
+      "Type": "AWS::Cognito::UserPoolClient",
+      "Properties": {
+        "ClientName": "user-pool-ui",
+        "GenerateSecret": false,
+        "UserPoolId": {
+          "Ref": "UserPool"
+        },
+        "AccessTokenValidity": 5,
+        "IdTokenValidity": 5,
+        "ExplicitAuthFlows": [
+          "ADMIN_NO_SRP_AUTH"
         ]
       }
     }
@@ -530,19 +1019,37 @@
     "GetMealsLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetMealsLambdaVersionZ0gXBqGma2w6t7qTU0enqqOQ34TjwTFbgoDkN6wm3Ok"
+        "Ref": "GetMealsLambdaVersioneJv4IEJcSJI2eHQXNH5GjmBsUtb0GPeGzq7hGzYmes"
       },
       "Export": {
         "Name": "sls-HuskyFit-API-dev-GetMealsLambdaFunctionQualifiedArn"
       }
     },
-    "WarmUpPluginDefaultLambdaFunctionQualifiedArn": {
+    "LoginUserLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "WarmUpPluginDefaultLambdaVersion4TBWTI7R0yP5U44vKEuLS4JBpUwwlmjBQjQhPpXxM"
+        "Ref": "LoginUserLambdaVersion8ctYzFfvAL3jKErfjOB9EU8PSTEG4lDW1i4GCMaNPWk"
       },
       "Export": {
-        "Name": "sls-HuskyFit-API-dev-WarmUpPluginDefaultLambdaFunctionQualifiedArn"
+        "Name": "sls-HuskyFit-API-dev-LoginUserLambdaFunctionQualifiedArn"
+      }
+    },
+    "SignupUserLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "SignupUserLambdaVersionvXw9Rwqusgb4NXxA2MW1lBas31JaW9hPS8jYy3ppA"
+      },
+      "Export": {
+        "Name": "sls-HuskyFit-API-dev-SignupUserLambdaFunctionQualifiedArn"
+      }
+    },
+    "PrivateAPILambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "PrivateAPILambdaVersionnDQhn9c1nNUD4AI4mRgHW5OXLPiLiQsAdcybk5OdL8"
+      },
+      "Export": {
+        "Name": "sls-HuskyFit-API-dev-PrivateAPILambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {

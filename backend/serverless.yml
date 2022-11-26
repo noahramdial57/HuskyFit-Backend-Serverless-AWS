@@ -116,12 +116,15 @@ resources:
           - Name: email
             Required: true
             Mutable: true
-          # - Name: name
-          #   Required: true
-          #   Mutable: true
-          # - Name: birthdate
-          #   Required: true
-          #   Mutable: true
+          - Name: name
+            Required: true
+            Mutable: true
+            AttributeDataType: String
+          - Name: birthdate
+            Required: true
+            Mutable: true
+            AttributeDataType: String
+
         Policies:
           PasswordPolicy:
             MinimumLength: 8
