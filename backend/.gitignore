@@ -1,9 +1,9 @@
 # package directories
 node_modules
 jspm_packages
+__pycache__
 
 # Serverless directories
 # .serverless/*
 .serverless
 .env
-.__pycache__
