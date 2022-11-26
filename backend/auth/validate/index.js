@@ -11,14 +11,22 @@ const sendResponse = (statusCode, body) => {
     return response
 }
 
-const validateInput = (data) => {
+const validateInputLogin = (data) => {
     const body = JSON.parse(data);
     const { email, password } = body
-    if (!email || !password || password.length < 6)
+    if (!email || !password || password.length < 8)
+        return false
+    return true
+}
+
+const validateInputSignup = (data) => {
+    const body = JSON.parse(data);
+    const { name, email, password, birthdate } = body
+    if (!name || !email || !password || !birthdate || password.length < 8)
         return false
     return true
 }
 
 module.exports = {
-    sendResponse, validateInput
+    sendResponse, validateInputLogin, validateInputSignup
 };

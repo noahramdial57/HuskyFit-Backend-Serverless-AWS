@@ -189,7 +189,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/HuskyFit-API/dev/1669427366231-2022-11-26T01:49:26.231Z/HuskyFit-API.zip"
+          "S3Key": "serverless/HuskyFit-API/dev/1669430201056-2022-11-26T02:36:41.056Z/HuskyFit-API.zip"
         },
         "Handler": "scraper.lambda_handler",
         "Runtime": "python3.9",
@@ -224,7 +224,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/HuskyFit-API/dev/1669427366231-2022-11-26T01:49:26.231Z/HuskyFit-API.zip"
+          "S3Key": "serverless/HuskyFit-API/dev/1669430201056-2022-11-26T02:36:41.056Z/HuskyFit-API.zip"
         },
         "Handler": "auth/login.handler",
         "Runtime": "nodejs16.x",
@@ -259,7 +259,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/HuskyFit-API/dev/1669427366231-2022-11-26T01:49:26.231Z/HuskyFit-API.zip"
+          "S3Key": "serverless/HuskyFit-API/dev/1669430201056-2022-11-26T02:36:41.056Z/HuskyFit-API.zip"
         },
         "Handler": "auth/signup.handler",
         "Runtime": "nodejs16.x",
@@ -294,7 +294,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/HuskyFit-API/dev/1669427366231-2022-11-26T01:49:26.231Z/HuskyFit-API.zip"
+          "S3Key": "serverless/HuskyFit-API/dev/1669430201056-2022-11-26T02:36:41.056Z/HuskyFit-API.zip"
         },
         "Handler": "auth/private.handler",
         "Runtime": "nodejs16.x",
@@ -322,44 +322,44 @@
         "PrivateAPILogGroup"
       ]
     },
-    "GetMealsLambdaVersioneJv4IEJcSJI2eHQXNH5GjmBsUtb0GPeGzq7hGzYmes": {
+    "GetMealsLambdaVersionKKC4FsMxDfCKrMqyQ4QFosBKdgCI755jOms4aG80bug": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetMealsLambdaFunction"
         },
-        "CodeSha256": "CnfcOEAcIB1MfhRX8T38LSckU04TGmbIGlT0i8lVMC4="
+        "CodeSha256": "E0yaZbxrnQq4SkVABCmcINnWmKz0VinXY/j8Tql75hM="
       }
     },
-    "LoginUserLambdaVersion8ctYzFfvAL3jKErfjOB9EU8PSTEG4lDW1i4GCMaNPWk": {
+    "LoginUserLambdaVersionxnMKOFP5x7ksRYjm9qMYsf56APYhvGXaqCpbNhpko0": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "LoginUserLambdaFunction"
         },
-        "CodeSha256": "CnfcOEAcIB1MfhRX8T38LSckU04TGmbIGlT0i8lVMC4="
+        "CodeSha256": "E0yaZbxrnQq4SkVABCmcINnWmKz0VinXY/j8Tql75hM="
       }
     },
-    "SignupUserLambdaVersionvXw9Rwqusgb4NXxA2MW1lBas31JaW9hPS8jYy3ppA": {
+    "SignupUserLambdaVersionU67ebBUnVxoHdXyxEsTvphSBSImMg27Sq1cjPxbgIU4": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "SignupUserLambdaFunction"
         },
-        "CodeSha256": "CnfcOEAcIB1MfhRX8T38LSckU04TGmbIGlT0i8lVMC4="
+        "CodeSha256": "E0yaZbxrnQq4SkVABCmcINnWmKz0VinXY/j8Tql75hM="
       }
     },
-    "PrivateAPILambdaVersionnDQhn9c1nNUD4AI4mRgHW5OXLPiLiQsAdcybk5OdL8": {
+    "PrivateAPILambdaVersionnFQNoXM5izIKcJaxESO46ygZNGk3gRK8v0yC9nhZI": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "PrivateAPILambdaFunction"
         },
-        "CodeSha256": "CnfcOEAcIB1MfhRX8T38LSckU04TGmbIGlT0i8lVMC4="
+        "CodeSha256": "E0yaZbxrnQq4SkVABCmcINnWmKz0VinXY/j8Tql75hM="
       }
     },
     "ApiGatewayRestApi": {
@@ -792,7 +792,7 @@
         ]
       }
     },
-    "ApiGatewayDeployment1669427336459": {
+    "ApiGatewayDeployment1669430183257": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -1019,7 +1019,7 @@
     "GetMealsLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetMealsLambdaVersioneJv4IEJcSJI2eHQXNH5GjmBsUtb0GPeGzq7hGzYmes"
+        "Ref": "GetMealsLambdaVersionKKC4FsMxDfCKrMqyQ4QFosBKdgCI755jOms4aG80bug"
       },
       "Export": {
         "Name": "sls-HuskyFit-API-dev-GetMealsLambdaFunctionQualifiedArn"
@@ -1028,7 +1028,7 @@
     "LoginUserLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "LoginUserLambdaVersion8ctYzFfvAL3jKErfjOB9EU8PSTEG4lDW1i4GCMaNPWk"
+        "Ref": "LoginUserLambdaVersionxnMKOFP5x7ksRYjm9qMYsf56APYhvGXaqCpbNhpko0"
       },
       "Export": {
         "Name": "sls-HuskyFit-API-dev-LoginUserLambdaFunctionQualifiedArn"
@@ -1037,7 +1037,7 @@
     "SignupUserLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "SignupUserLambdaVersionvXw9Rwqusgb4NXxA2MW1lBas31JaW9hPS8jYy3ppA"
+        "Ref": "SignupUserLambdaVersionU67ebBUnVxoHdXyxEsTvphSBSImMg27Sq1cjPxbgIU4"
       },
       "Export": {
         "Name": "sls-HuskyFit-API-dev-SignupUserLambdaFunctionQualifiedArn"
@@ -1046,7 +1046,7 @@
     "PrivateAPILambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "PrivateAPILambdaVersionnDQhn9c1nNUD4AI4mRgHW5OXLPiLiQsAdcybk5OdL8"
+        "Ref": "PrivateAPILambdaVersionnFQNoXM5izIKcJaxESO46ygZNGk3gRK8v0yC9nhZI"
       },
       "Export": {
         "Name": "sls-HuskyFit-API-dev-PrivateAPILambdaFunctionQualifiedArn"

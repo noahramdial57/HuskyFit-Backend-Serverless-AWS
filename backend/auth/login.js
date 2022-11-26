@@ -1,11 +1,11 @@
 const AWS = require('aws-sdk')
-const { sendResponse, validateInput } = require("./validate");
+const { sendResponse, validateInputLogin } = require("./validate");
 
 const cognito = new AWS.CognitoIdentityServiceProvider()
 
 module.exports.handler = async (event) => {
     try {
-        const isValid = validateInput(event.body)
+        const isValid = validateInputLogin(event.body)
         if (!isValid)
             return sendResponse(400, { message: 'Invalid input' })
 
