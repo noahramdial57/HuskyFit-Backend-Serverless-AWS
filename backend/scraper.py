@@ -111,7 +111,12 @@ def getMeals(dining_hall, meal):
         myDict["Food Item"] = menu_item.text
         myDict["Dining Hall"] = dining_hall
         myDict["Meal"] = meal
-        myDict["Allergens"] = allergens.text
+        
+        # For menu items with no corresponding Nutrition Labels | Don't include them
+        try: 
+            myDict["Allergens"] = allergens.text
+        except:
+            break
 
         # Get all dietary restrictions
         restrictions = []
@@ -150,7 +155,7 @@ def getMeals(dining_hall, meal):
                 myDict["Total Fat"] = parse
                 continue
             
-            if "Total Carbohydrates" in clean_text:
+            if "Total Carbohydrate." in clean_text:
                 myDict["Total Carbohydrates"] = parse
                 continue
 
@@ -203,6 +208,6 @@ def getMeals(dining_hall, meal):
                 myDict["Potassium"] = parse
                 continue
 
-            L.append(myDict)
+        L.append(myDict)
 
     return L
