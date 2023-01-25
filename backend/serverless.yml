@@ -29,7 +29,7 @@ custom:
 
   warmup:
     default:
-      enabled: true
+      enabled: false # disables warmup as default
       folderName: '.warmup'
       memorySize: 256
       name: warmer-default
@@ -49,26 +49,19 @@ functions:
     runtime: python3.9
     handler: scraper.lambda_handler
     timeout: 10 # lambda will timeout after 10 secs
-
-    warmup:
-      default:
-        enabled: true
-
     events:
       - http:
           path: /{dininghall}/{meal}
           method: get
           private: true
+    warmup:
+      default:
+        enabled: true
 
   mockGetMeals:
     runtime: python3.9
     handler: mock.lambda_handler
     timeout: 10 # lambda will timeout after 10 secs
-
-    warmup:
-      default:
-        enabled: false
-
     events:
       - http:
           path: /{dininghall}/{meal}/mock
@@ -86,10 +79,6 @@ functions:
           cors: true
           private: true
 
-    warmup:
-      default:
-        enabled: false
-
   signupUser:
     handler: auth/signup.handler
     events:
@@ -98,10 +87,6 @@ functions:
           method: post
           cors: true
           private: true
-
-    warmup:
-      default:
-        enabled: false
 
   privateAPI:
     handler: auth/private.handler
@@ -122,11 +107,7 @@ functions:
               - email
               - name
               - birthdate
-    
-    warmup:
-      default:
-        enabled: false
-
+  
 resources:
   Resources:
     UserPool:
