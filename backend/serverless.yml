@@ -8,6 +8,7 @@ provider:
   environment:
     user_pool_id: { Ref: UserPool }
     client_id: { Ref: UserClient }
+    TZ: America/New_York # Change timezone to EST
 
   iamRoleStatements:
     - Effect: Allow
