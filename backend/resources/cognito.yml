@@ -1,0 +1,51 @@
+Resources:
+
+    UserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: serverless-auth-pool
+        Schema:
+          - Name: email
+            Required: true
+            Mutable: true
+          - Name: name
+            Required: true
+            Mutable: true
+            AttributeDataType: String
+          - Name: birthdate
+            Required: true
+            Mutable: true
+            AttributeDataType: String
+
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 8
+        AutoVerifiedAttributes: ["email"]
+
+    UserClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: user-pool-ui
+        GenerateSecret: false
+        UserPoolId: { Ref: UserPool }
+        AccessTokenValidity: 5
+        IdTokenValidity: 5
+        ExplicitAuthFlows:
+          - "ADMIN_NO_SRP_AUTH"
+
+
+    ApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        Name: HuskyFitAuthorizer
+        Type: COGNITO_USER_POOLS
+        IdentitySource: method.request.header.Authorization
+
+        # apparently ApiGatewayRestApi is a global string 
+        # this is also pre-defined by serverless
+        RestApiId:
+          Ref: ApiGatewayRestApi 
+        ProviderARNs:
+          - Fn::GetAtt:
+              - UserPool # make sure this matches UserPool from env vars
+              - Arn
