@@ -1,0 +1,19 @@
+Resources:
+
+  WorkoutTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: HuskyFit-Workout
+      AttributeDefinitions:
+        - AttributeName: UserID
+          AttributeType: S
+        - AttributeName: Date
+          AttributeType: S
+      KeySchema:
+        - AttributeName: UserID
+          KeyType: HASH
+        - AttributeName: Date
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
