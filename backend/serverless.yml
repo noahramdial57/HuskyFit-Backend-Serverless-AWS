@@ -72,6 +72,21 @@ functions:
           method: get
           private: true
 
+  profile:
+    handler: profile.handler
+    events:
+      - http:
+          path: /profile
+          method: get
+          private: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+            claims:
+                  - name
+                  - email
+                  - birthdate
 
   # login and signup lambdas
   loginUser:
@@ -101,14 +116,10 @@ functions:
           cors: true
           private: true
           authorizer:
-            name: PrivateAuthorizer
             type: COGNITO_USER_POOLS
-            arn:
-              Fn::GetAtt:
-                - UserPool
-                - Arn
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
             claims:
-              - email
-              - name
-              - birthdate
+                  - name
+                  - email
   
