@@ -17,10 +17,15 @@ provider:
         - cognito-idp:AdminInitiateAuth
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminSetUserPassword
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
       Resource: "*"
 
 resources:
   - ${file(resources/cognito.yml)}
+  - ${file(resources/dynamo.yml)}
 
 plugins:
   - serverless-offline
@@ -70,6 +75,14 @@ functions:
       - http:
           path: /{dininghall}/{meal}/mock
           method: get
+          private: true
+
+  workout:
+    handler: workout.handler
+    events:
+      - http:
+          path: /workout
+          method: ANY
           private: true
 
   profile:
