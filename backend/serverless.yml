@@ -84,6 +84,12 @@ functions:
           path: /workout
           method: ANY
           private: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+            claims:
+                  - sub
 
   profile:
     handler: profile.handler
