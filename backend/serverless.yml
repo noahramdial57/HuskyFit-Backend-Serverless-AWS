@@ -70,7 +70,7 @@ functions:
   mockGetMeals:
     runtime: python3.9
     handler: mock.lambda_handler
-    timeout: 10 # lambda will timeout after 10 secs
+    timeout: 15 # lambda will timeout after 10 secs
     events:
       - http:
           path: /{dininghall}/{meal}/mock
