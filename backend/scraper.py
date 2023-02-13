@@ -108,8 +108,8 @@ def getMeals(dining_hall, meal):
         allergens = page_soup.find("span", {"class": "labelallergensvalue"})
 
         myDict = dict()
-        myDict["Food Item"] = menu_item.text
-        myDict["Dining Hall"] = dining_hall
+        myDict["Food-Item"] = menu_item.text
+        myDict["Dining-Hall"] = dining_hall
         myDict["Meal"] = meal
         
         # For menu items with no corresponding Nutrition Labels | Don't include them
@@ -123,21 +123,21 @@ def getMeals(dining_hall, meal):
         for foo in page_soup.find_all('img', alt=True):
             text = foo['alt']
             if "Gluten Friendly" in text:
-                restrictions.append("Gluten Friendly")
+                restrictions.append("Gluten-Friendly")
                 continue
             if "Less Sodium" in text:
-                restrictions.append("Less Sodium")
+                restrictions.append("Less-Sodium")
                 continue
             if "Smart Check" in text:
-                restrictions.append("Smart Check")
+                restrictions.append("Smart-Check")
                 continue
 
             restrictions.append(text)
 
-        myDict['Dietary Restrictions'] = restrictions
+        myDict['Dietary-Restrictions'] = restrictions
         myDict["Date"] = str(today)
         myDict["Calories"] = calories_val.text
-        myDict["Serving Size"] = serving_size[1].text
+        myDict["Serving-Size"] = serving_size[1].text
 
         for facts in nut_facts:
 
@@ -152,27 +152,27 @@ def getMeals(dining_hall, meal):
                 continue
 
             if "Total Fat" in clean_text:
-                myDict["Total Fat"] = parse
+                myDict["Total-Fat"] = parse
                 continue
             
             if "Total Carbohydrate." in clean_text:
-                myDict["Total Carbohydrates"] = parse
+                myDict["Total-Carbohydrates"] = parse
                 continue
 
             if "Saturated Fat" in clean_text:
-                myDict["Saturated Fat"] = parse
+                myDict["Saturated-Fat"] = parse
                 continue
 
             if "Dietary Fiber" in clean_text:
-                myDict["Dietary Fiber"] = parse
+                myDict["Dietary-Fiber"] = parse
                 continue
 
             if "Trans Fat" in clean_text:
-                myDict["Trans Fat"] = parse
+                myDict["Trans-Fat"] = parse
                 continue
 
             if "Total Sugars" in clean_text:
-                myDict["Total Sugars"] = parse
+                myDict["Total-Sugars"] = parse
                 continue
 
             if "Cholesterol" in clean_text:
@@ -181,7 +181,7 @@ def getMeals(dining_hall, meal):
 
             if "Added Sugars" in clean_text:
                 parse = clean_text.split()[1] # get grams of nutritional fact
-                myDict["Added Sugars"] = parse
+                myDict["Added-Sugars"] = parse
                 continue
 
             if "Sodium" in clean_text:
@@ -201,7 +201,7 @@ def getMeals(dining_hall, meal):
                 continue
 
             if "Vitamin D" in clean_text:
-                myDict["Vitamin D"] = parse
+                myDict["Vitamin-D"] = parse
                 continue
 
             if "Potassium" in clean_text:
