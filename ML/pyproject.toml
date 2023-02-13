@@ -7,6 +7,8 @@ authors = ["Morphy Kuffour <morphy.kuffour@uconn.edu>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 torch = "^1.13.1"
+sklearn = "^0.0.post2"
+pandas = "^1.5.3"
 
 [tool.poetry.dev-dependencies]
 
