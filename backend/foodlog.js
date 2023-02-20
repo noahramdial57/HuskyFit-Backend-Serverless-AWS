@@ -15,7 +15,7 @@ exports.handler = async (event) => {
     let body = "Nothing";
     
     // Name of the workout table
-    let Table = "HuskyFit-Workout" // process.env.Workout-Table
+    let Table = "HuskyFit-Food-Logs" // process.env.Workout-Table
     
     // Parse out the event body
     let parse = JSON.parse(event.body)
@@ -28,7 +28,7 @@ exports.handler = async (event) => {
     let date = mm + '/' + dd + '/' + yyyy;
 
     let UserId = event.requestContext.authorizer.claims.sub
-    let item = [parse] // workout 
+    let item = [parse] // food log 
     let method = JSON.parse(JSON.stringify(event.httpMethod))
 
     switch (method) {
@@ -39,7 +39,7 @@ exports.handler = async (event) => {
             let params1 = {
                 TableName: Table,
                 ExpressionAttributeNames: {
-                    "#Y": "Workouts"
+                    "#Y": "Food_Log"
                 },
                 ExpressionAttributeValues: {
                     ":y": item
@@ -48,14 +48,14 @@ exports.handler = async (event) => {
                     UserID: UserId,
                     Date: date
                 },
-                ConditionExpression: "attribute_exists(Workouts)",
+                ConditionExpression: "attribute_exists(Food_Log)",
                 UpdateExpression: "SET #Y = list_append(#Y,:y)"
             };
 
             try {
                 // Workout has been added to existing dataset
                 const data = await dynamo.update(params1).promise();
-                body = JSON.stringify("Workout has been added")
+                body = JSON.stringify("Food log has been added")
 
                 return {
                     "isBase64Encoded": false,
@@ -74,11 +74,11 @@ exports.handler = async (event) => {
                         Item: {
                             "UserID": UserId,
                             "Date": date,
-                            "Workouts": item
+                            "Food_Log": item
                         }
                     })
                     .promise();
-                body = JSON.stringify("Item successfully added to database")
+                body = JSON.stringify("Food log successfully added to database")
                 
                 return {
                     "isBase64Encoded": false,
@@ -90,7 +90,7 @@ exports.handler = async (event) => {
                 };
             }
 
-        // Get all of the users workouts for a specific date | This Works!!
+        // Get all of the users food logs for a specific date | This Works!!
         case "POST":
             date = parse.Date
             let params = {
@@ -116,7 +116,6 @@ exports.handler = async (event) => {
                 "statusCode": 200,
                 "body": body
             };
-
     }
 
     return {

@@ -91,6 +91,20 @@ functions:
             claims:
                   - sub
 
+  Food-Logs:
+    handler: foodlog.handler
+    events:
+      - http:
+          path: /food-log
+          method: ANY
+          private: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+            claims:
+                  - sub
+
   profile:
     handler: profile.handler
     events:
