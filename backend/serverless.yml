@@ -1,31 +1,30 @@
 service: HuskyFit-API
 frameworkVersion: '3'
-
 provider:
   name: aws
   runtime: nodejs16.x
-
   environment:
-    user_pool_id: { Ref: UserPool }
-    client_id: { Ref: UserClient }
-    TZ: America/New_York # Change timezone to EST
-
+    user_pool_id:
+      Ref: UserPool
+    client_id:
+      Ref: UserClient
+    TZ: America/New_York
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - lambda:InvokeFunction
-        - cognito-idp:AdminInitiateAuth
-        - cognito-idp:AdminCreateUser
-        - cognito-idp:AdminSetUserPassword
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: "*"
+        - 'lambda:InvokeFunction'
+        - 'cognito-idp:AdminInitiateAuth'
+        - 'cognito-idp:AdminCreateUser'
+        - 'cognito-idp:AdminSetUserPassword'
+        - 'dynamodb:GetItem'
+        - 'dynamodb:PutItem'
+        - 'dynamodb:UpdateItem'
+        - 'dynamodb:DeleteItem'
+      Resource: '*'
 
 resources:
-  - ${file(resources/cognito.yml)}
-  - ${file(resources/dynamo.yml)}
+  - '${file(resources/cognito.yml)}'
+  - '${file(resources/dynamo.yml)}'
 
 plugins:
   - serverless-offline
@@ -38,13 +37,13 @@ custom:
 
   warmup:
     default:
-      enabled: false # disables warmup as default
-      folderName: '.warmup'
+      enabled: false
+      folderName: .warmup
       memorySize: 256
       name: warmer-default
       events:
-        - schedule: 'cron(0/5 13-5 ? * SUN-SAT *)' # 8:00am to 12:00pm EST | Every 5 minutes | UTX
-      package:                                     
+        - schedule: cron(0/5 13-5 ? * SUN-SAT *)
+      package:
         individually: true
         patterns:
           - '!../**'
@@ -54,26 +53,27 @@ custom:
       concurrency: 1
 
 functions:
+
   getMeals:
     runtime: python3.9
     handler: scraper.lambda_handler
-    timeout: 10 # lambda will timeout after 10 secs
+    timeout: 10
     events:
       - http:
-          path: /{dininghall}/{meal}
+          path: '/{dininghall}/{meal}'
           method: get
           private: true
     warmup:
       default:
         enabled: true
-
+        
   mockGetMeals:
     runtime: python3.9
     handler: mock.lambda_handler
-    timeout: 15 # lambda will timeout after 10 secs
+    timeout: 15
     events:
       - http:
-          path: /{dininghall}/{meal}/mock
+          path: '/{dininghall}/{meal}/mock'
           method: get
           private: true
 
@@ -89,7 +89,7 @@ functions:
             authorizerId:
               Ref: ApiGatewayAuthorizer
             claims:
-                  - sub
+              - sub
 
   Food-Logs:
     handler: foodlog.handler
@@ -103,7 +103,21 @@ functions:
             authorizerId:
               Ref: ApiGatewayAuthorizer
             claims:
-                  - sub
+              - sub
+
+  User-Info:
+    handler: userInfo.handler
+    events:
+      - http:
+          path: /user-info
+          method: ANY
+          private: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+            claims:
+              - sub
 
   profile:
     handler: profile.handler
@@ -117,11 +131,10 @@ functions:
             authorizerId:
               Ref: ApiGatewayAuthorizer
             claims:
-                  - name
-                  - email
-                  - birthdate
+              - name
+              - email
+              - birthdate
 
-  # login and signup lambdas
   loginUser:
     handler: auth/login.handler
     events:
@@ -139,7 +152,7 @@ functions:
           method: post
           cors: true
           private: true
-
+          
   privateAPI:
     handler: auth/private.handler
     events:
@@ -153,6 +166,5 @@ functions:
             authorizerId:
               Ref: ApiGatewayAuthorizer
             claims:
-                  - name
-                  - email
-  
+              - name
+              - email

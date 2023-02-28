@@ -28,7 +28,7 @@ exports.handler = async (event) => {
     let date = mm + '/' + dd + '/' + yyyy;
 
     let UserId = event.requestContext.authorizer.claims.sub
-    let item = [parse] // food log 
+    let item = [parse] // workout 
     let method = JSON.parse(JSON.stringify(event.httpMethod))
 
     switch (method) {
