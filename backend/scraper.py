@@ -15,24 +15,11 @@ def lambda_handler(event, context):
     parse = event['path'].split("/") # ['', 'buckley', 'lunch']
     dining_hall = parse[1].capitalize()
     meal = parse[2].capitalize()
-    path = "/tmp/" + dining_hall + "-" + meal + ".json"
-
-    # If file exists, continue 
-    if os.path.isfile(path):
-        pass
-    else:
-        # Create file inside tmp folder
-        f = open(path, 'w+')
-
-    # If file is empty, run the algo and cache the data
-    if os.path.getsize(path) == 0:
-        data = json.dumps(getMeals(dining_hall, meal))
-
-        # Cache the data in its corresponding file
-        with open(path, "w") as outfile:
-            outfile.write(data)
-
-        return {
+    date = json.loads(event['body'])['Date']
+    
+    data = json.dumps(getMeals(dining_hall, meal, date))
+    
+    return {
         'statusCode': 200,
         "headers": {
             "Content-Type": "application/json"
@@ -40,20 +27,8 @@ def lambda_handler(event, context):
         'body': data
     }
 
-    # If file contains cached data, return it
-    else:
 
-        with open(path, 'r') as openfile:
-            json_object = json.load(openfile)
-            return {
-                'statusCode': 200,
-                "headers": {
-                    "Content-Type": "application/json"
-                },
-                'body': json.dumps(json_object)
-            }
-
-def getMeals(dining_hall, meal):
+def getMeals(dining_hall, meal, date):
 
     link_list= ["http://nutritionanalysis.dds.uconn.edu/longmenu.aspx?sName=UCONN+Dining+Services&locationNum=03&locationName=Buckley+Dining+Hall&naFlag=1&WeeksMenus=This+Week%27s+Menus&dtdate=",                    # 10%2f25%2f2022&mealName=Breakfast"
                 "http://nutritionanalysis.dds.uconn.edu/longmenu.aspx?sName=UCONN+Dining+Services&locationNum=42&locationName=Gelfenbien+Commons%2c+Halal+%26+Kosher&naFlag=1&WeeksMenus=This+Week%27s+Menus&dtdate=",  # 10%2f27%2f2022&mealName=Breakfast"
@@ -75,12 +50,11 @@ def getMeals(dining_hall, meal):
         if dining_hall in link:
             url = link
             break
-
-    # Refactor link | Get todays link
-    today = date.today()
-    dd = today.strftime("%d")
-    mm = today.strftime("%m")
-    yyyy = today.strftime("%Y")
+    
+    parse = date.split("/") # ['02', '28', '2023']
+    mm = parse[0]
+    dd = parse[1]
+    yyyy = parse[2]
 
     edited_url = url + mm + '%2f' + dd + '%2f' + yyyy + '&mealName=' + meal
     buckley = requests.get(edited_url)
@@ -135,7 +109,7 @@ def getMeals(dining_hall, meal):
             restrictions.append(text)
 
         myDict['Dietary Restrictions'] = restrictions
-        myDict["Date"] = str(today)
+        myDict["Date"] = date
         myDict["Calories"] = calories_val.text
         myDict["Serving Size"] = serving_size[1].text
 

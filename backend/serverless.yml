@@ -3,12 +3,14 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs16.x
+
   environment:
     user_pool_id:
       Ref: UserPool
     client_id:
       Ref: UserClient
     TZ: America/New_York
+    
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -61,7 +63,7 @@ functions:
     events:
       - http:
           path: '/{dininghall}/{meal}'
-          method: get
+          method: post
           private: true
     warmup:
       default:
@@ -152,7 +154,7 @@ functions:
           method: post
           cors: true
           private: true
-          
+
   privateAPI:
     handler: auth/private.handler
     events:

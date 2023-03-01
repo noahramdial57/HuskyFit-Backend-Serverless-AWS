@@ -1,21 +1,23 @@
 exports.handler = async (event) => {
     
-    let profileInfo = {
-        "name": event.requestContext.authorizer.claims.name,
-        "birthdate": event.requestContext.authorizer.claims.birthdate,
-        "email": event.requestContext.authorizer.claims.email
+    let name  = event.requestContext.authorizer.claims.name
+    let dob   = event.requestContext.authorizer.claims.birthdate
+    let email = event.requestContext.authorizer.claims.email
+    
+    let body = {
+        "Name": name,
+        "Dob": dob,
+        "Email": email
     }
-
-    let statusCode = 200;
-    const headers = {
-    	"Content-Type": "application/json"
-    };
           
     return {
-        statusCode,
-        headers,
-        profileInfo
-    }
+        "isBase64Encoded": false,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "statusCode": 200,
+        "body": JSON.stringify(body)
+    };
   
 
 }
