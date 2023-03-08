@@ -69,15 +69,21 @@ functions:
       default:
         enabled: true
         
-  mockGetMeals:
+  Get-Recommendations:
     runtime: python3.9
-    handler: mock.lambda_handler
-    timeout: 15
+    handler: mockRec.lambda_handler
+    timeout: 10
     events:
       - http:
-          path: '/{dininghall}/{meal}/mock'
+          path: /recommendation
           method: get
           private: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+            claims:
+              - sub
 
   workout:
     handler: workout.handler

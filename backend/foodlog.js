@@ -13,19 +13,9 @@ async function getItem(params) {
 exports.handler = async (event) => {
 
     let body = "Nothing";
-    
-    // Name of the workout table
     let Table = "HuskyFit-Food-Logs" // process.env.Workout-Table
-    
-    // Parse out the event body
     let parse = JSON.parse(event.body)
-    
-    // Get todays date to store workout
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); 
-    var yyyy = today.getFullYear();
-    let date = mm + '/' + dd + '/' + yyyy;
+    let date = parse.Date
 
     let UserId = event.requestContext.authorizer.claims.sub
     let item = [parse] // workout 
