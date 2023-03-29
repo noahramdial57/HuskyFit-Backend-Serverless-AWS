@@ -145,11 +145,13 @@ exports.handler = async (event) => {
         const lunch = await sagemakerRuntime.invokeEndpoint(params_lunch).promise();
         const dinner = await sagemakerRuntime.invokeEndpoint(params_dinner).promise();
 
-        const responseBodyBreakfast = breakfast.Body.toString();
-        const responseBodyLunch = lunch.Body.toString();
-        const responseBodyDinner = dinner.Body.toString();
+        const responseBodyBreakfast = JSON.parse(breakfast.Body.toString());
+        const responseBodyLunch = JSON.parse(lunch.Body.toString());
+        const responseBodyDinner = JSON.parse(dinner.Body.toString());
         
         var recommendations = responseBodyBreakfast.concat(responseBodyLunch, responseBodyDinner);
+        // var recommendations = [].concat(responseBodyBreakfast, responseBodyLunch, responseBodyDinner)
+        // var recommendations = [...responseBodyBreakfast, ...responseBodyLunch, ...responseBodyDinner];
 
         return {
             "isBase64Encoded": false,
@@ -157,7 +159,7 @@ exports.handler = async (event) => {
                 "Content-Type": "application/json"
             },
             "statusCode": 200,
-            "body": recommendations
+            "body": JSON.stringify(recommendations)
     };
 
         // Process the response from the endpoint
