@@ -26,7 +26,7 @@ exports.handler = async (event) => {
     let Allergens = []
     let diet_restr = []
     let dHallPref = []
-    let endpoint_name = 'pytorch-inference-2023-03-29-02-01-00-581'
+    let endpoint_name = 'pytorch-inference-2023-03-29-18-19-20-454'
 
      let params = {
                 TableName: Table,
@@ -37,37 +37,48 @@ exports.handler = async (event) => {
     
      try {
         let data = await getItem(params)
-        body = JSON.stringify(data.Item)
+        body = data.Item
         let weight = "100"
         let height = "5'0"
         
-         try {
-            weight = body.Item.Weight
-        } catch (err){
-            // if attribute is empty
-        }
+        //  try {
+        //     weight = body.Weight.toString()
+        // } catch (err){
+        //     // if attribute is empty
+        // }
         
-         try {
-            height = body.Item.Height
-        } catch (err){
-            // if attribute is empty
-        }
+        //  try {
+        //     height = body.Height.toString()
+        // } catch (err){
+        //     // if attribute is empty
+        // }
 
         try {
-            Allergens = body.Item.Allergens
+            Allergens = body.Allergens
         } catch (err){
             // if attribute is empty
         }
         
         try {
-            diet_restr = body.item.Dietary_Restrictions
+            diet_restr = body.Dietary_Restrictions
         } catch (err){
             // if attribute is empty
             // console.log(err)
         }
         
         try {
-            dHallPref = body.item.Dining_Hall_Preference
+            let tmp = body.Dining_Hall_Preference
+            for (var i = 0; i < tmp.length; i++) {
+                
+                if (tmp[i] == "McMahon") {
+                    dHallPref.push(tmp[i])
+
+                } else{
+                    dHallPref.push(tmp[i].toLowerCase())
+                }
+                
+            }
+            
         } catch (err){
             // if attribute is empty
             // console.log(err)

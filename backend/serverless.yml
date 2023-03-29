@@ -73,25 +73,10 @@ functions:
       default:
         enabled: true
         
-  Get-Recommendations:
-    runtime: python3.9
-    handler: mockRec.lambda_handler
-    timeout: 10
-    events:
-      - http:
-          path: /recommendation
-          method: get
-          private: true
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerId:
-              Ref: ApiGatewayAuthorizer
-            claims:
-              - sub
-
   # Get-Recommendations:
-  #   handler: rec.lambda_handler
-  #   timeout: 15
+  #   runtime: python3.9
+  #   handler: mockRec.lambda_handler
+  #   timeout: 10
   #   events:
   #     - http:
   #         path: /recommendation
@@ -104,9 +89,24 @@ functions:
   #           claims:
   #             - sub
 
-    # warmup:
-    #   default:
-    #     enabled: true
+  Get-Recommendations:
+    handler: rec.handler
+    timeout: 20
+    events:
+      - http:
+          path: /recommendation
+          method: get
+          private: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+            claims:
+              - sub
+
+    warmup:
+      default:
+        enabled: true
 
   workout:
     handler: workout.handler
