@@ -31,7 +31,8 @@ exports.handler = async (event) => {
                         "Weight": parse.Weight,
                         "Height": parse.Height,
                         "Allergens": parse.Allergens,
-                        "Dietary Restrictions": parse.Dietary_restrictions
+                        "Dietary_Restrictions": parse.Dietary_Restrictions,
+                        "Dining_Hall_Preference": parse.Dining_Hall_Preference
 
                     }
                 })

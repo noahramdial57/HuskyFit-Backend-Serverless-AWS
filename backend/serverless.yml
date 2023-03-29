@@ -23,6 +23,9 @@ provider:
         - 'dynamodb:UpdateItem'
         - 'dynamodb:DeleteItem'
         - 's3:GetObject'
+        - 'sagemaker:InvokeEndpoint'
+
+
       Resource: '*'
 
 resources:
@@ -85,6 +88,25 @@ functions:
               Ref: ApiGatewayAuthorizer
             claims:
               - sub
+
+  # Get-Recommendations:
+  #   handler: rec.lambda_handler
+  #   timeout: 15
+  #   events:
+  #     - http:
+  #         path: /recommendation
+  #         method: get
+  #         private: true
+  #         authorizer:
+  #           type: COGNITO_USER_POOLS
+  #           authorizerId:
+  #             Ref: ApiGatewayAuthorizer
+  #           claims:
+  #             - sub
+
+    # warmup:
+    #   default:
+    #     enabled: true
 
   workout:
     handler: workout.handler
@@ -166,6 +188,10 @@ functions:
           method: post
           cors: true
           private: true
+
+    warmup:
+      default:
+        enabled: true
 
   signupUser:
     handler: auth/signup.handler

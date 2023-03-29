@@ -4,6 +4,12 @@ const { sendResponse, validateInputLogin } = require("./validate");
 const cognito = new AWS.CognitoIdentityServiceProvider()
 
 module.exports.handler = async (event) => {
+
+    if (event.source === 'serverless-plugin-warmup') {
+        console.log('WarmUp - Lambda is warm!');
+        return 'Lambda is warm!';
+      }
+      
     try {
         const isValid = validateInputLogin(event.body)
         if (!isValid)
