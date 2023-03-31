@@ -41,17 +41,17 @@ exports.handler = async (event) => {
         let weight = "100"
         let height = "5'0"
         
-        //  try {
-        //     weight = body.Weight.toString()
-        // } catch (err){
-        //     // if attribute is empty
-        // }
+         try {
+            weight = body.Weight
+        } catch (err){
+            // if attribute is empty
+        }
         
-        //  try {
-        //     height = body.Height.toString()
-        // } catch (err){
-        //     // if attribute is empty
-        // }
+         try {
+            height = body.Height
+        } catch (err){
+            // if attribute is empty
+        }
 
         try {
             Allergens = body.Allergens
@@ -63,7 +63,6 @@ exports.handler = async (event) => {
             diet_restr = body.Dietary_Restrictions
         } catch (err){
             // if attribute is empty
-            // console.log(err)
         }
         
         try {
@@ -81,7 +80,6 @@ exports.handler = async (event) => {
             
         } catch (err){
             // if attribute is empty
-            // console.log(err)
         }
 
         const payload_breakfast = {
@@ -150,8 +148,6 @@ exports.handler = async (event) => {
         const responseBodyDinner = JSON.parse(dinner.Body.toString());
         
         var recommendations = responseBodyBreakfast.concat(responseBodyLunch, responseBodyDinner);
-        // var recommendations = [].concat(responseBodyBreakfast, responseBodyLunch, responseBodyDinner)
-        // var recommendations = [...responseBodyBreakfast, ...responseBodyLunch, ...responseBodyDinner];
 
         return {
             "isBase64Encoded": false,
@@ -161,10 +157,7 @@ exports.handler = async (event) => {
             "statusCode": 200,
             "body": JSON.stringify(recommendations)
     };
-
-        // Process the response from the endpoint
-        // console.log(responseBody);
-
+    
     } catch (err) {
         console.log(err)
         body = JSON.stringify("There was an error retrieving User Info.")

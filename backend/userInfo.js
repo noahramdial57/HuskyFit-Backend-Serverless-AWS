@@ -22,6 +22,7 @@ exports.handler = async (event) => {
     switch (method) {
 
         // Add item to database
+        // Remove duplicate items, frontend bug
         case "PUT":
             await dynamo
                 .put({
@@ -30,9 +31,9 @@ exports.handler = async (event) => {
                         "UserID": UserId,
                         "Weight": parse.Weight,
                         "Height": parse.Height,
-                        "Allergens": parse.Allergens,
-                        "Dietary_Restrictions": parse.Dietary_Restrictions,
-                        "Dining_Hall_Preference": parse.Dining_Hall_Preference
+                        "Allergens": Array.from(new Set(parse.Allergens)),
+                        "Dietary_Restrictions": Array.from(new Set(parse.Dietary_Restrictions)),
+                        "Dining_Hall_Preference": Array.from(new Set(parse.Dining_Hall_Preferences))
 
                     }
                 })
