@@ -27,6 +27,7 @@ module.exports.handler = async (event) => {
             }
         }
         const response = await cognito.adminInitiateAuth(params).promise();
+        console.log(email + " has successfully logged into HuskyFit.")
         return sendResponse(200, { message: 'Success', token: response.AuthenticationResult.IdToken })
     }
     catch (error) {

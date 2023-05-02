@@ -26,7 +26,7 @@ exports.handler = async (event) => {
     let Allergens = []
     let diet_restr = []
     let dHallPref = []
-    let endpoint_name = 'pytorch-inference-2023-03-29-18-19-20-454'
+    let endpoint_name = 'pytorch-inference-2023-04-07-18-21-44-661'
 
      let params = {
                 TableName: Table,

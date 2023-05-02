@@ -50,6 +50,7 @@ module.exports.handler = async (event) => {
             };
             await cognito.adminSetUserPassword(paramsForSetPass).promise()
         }
+        console.log(name + " has successfully signed up for HuskyFit.")
         return sendResponse(200, {
             message: 'User registration successful'
         })

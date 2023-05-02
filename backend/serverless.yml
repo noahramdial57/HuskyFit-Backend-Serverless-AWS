@@ -69,9 +69,10 @@ functions:
           path: '/{dininghall}/{meal}'
           method: post
           private: true
-    warmup:
-      default:
-        enabled: true
+
+    # warmup:
+    #   default:
+    #     enabled: true
         
   Get-Recommendations:
     runtime: python3.9
@@ -104,10 +105,10 @@ functions:
   #           claims:
   #             - sub
 
-  #   warmup:
-  #     default:
-  #       enabled: true
-
+    # warmup:
+    #   default:
+    #     enabled: true
+    
   workout:
     handler: workout.handler
     events:
@@ -189,9 +190,9 @@ functions:
           cors: true
           private: true
 
-    warmup:
-      default:
-        enabled: true
+    # warmup:
+    #   default:
+    #     enabled: true
 
   signupUser:
     handler: auth/signup.handler
@@ -217,3 +218,11 @@ functions:
             claims:
               - name
               - email
+
+  # Cache dining hall data in S3
+  HuskyFit-API-dev-Cache-Dining-Hall-Data:
+    handler: cache_dining_hall_data.lambda_handler
+    events:
+      - eventBridge:
+          schedule: 'cron(30 4 * * ? *)'
+          
